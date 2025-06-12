@@ -1,4 +1,3 @@
-
 import TicketHeader from "../components/TicketHeader";
 import TicketStatus from "../components/TicketStatus";
 import ActionItem from "../components/ActionItem";
@@ -65,27 +64,21 @@ const Index = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50">
       <div className="container mx-auto px-4 py-8 max-w-7xl">
-        {/* Header */}
-        <TicketHeader ticket={ticketData} />
-
         {/* Main Content Grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mt-6">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {/* Left Column - Main Info */}
           <div className="lg:col-span-2 space-y-6">
-            {/* Status and Priority */}
-            <TicketStatus 
-              status={ticketData.status}
-              priority={ticketData.priority}
-              urgency={ticketData.urgency}
-              created={ticketData.created}
-              updated={ticketData.updated}
-              dueDate={ticketData.dueDate}
-            />
-
-            {/* Description */}
-            <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-6">
-              <h3 className="text-lg font-semibold text-slate-900 mb-4">Description</h3>
-              <p className="text-slate-700 leading-relaxed">{ticketData.description}</p>
+            {/* Header with Status and Priority */}
+            <div className="space-y-6">
+              <TicketHeader ticket={ticketData} />
+              <TicketStatus 
+                status={ticketData.status}
+                priority={ticketData.priority}
+                urgency={ticketData.urgency}
+                created={ticketData.created}
+                updated={ticketData.updated}
+                dueDate={ticketData.dueDate}
+              />
             </div>
 
             {/* Current Actions */}

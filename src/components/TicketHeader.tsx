@@ -30,31 +30,7 @@ const TicketHeader = ({ ticket }: TicketHeaderProps) => {
               {ticket.id}
             </span>
           </div>
-          <h1 className="text-2xl font-bold text-slate-900 mb-4">{ticket.title}</h1>
-          
-          <div className="flex flex-col sm:flex-row gap-4">
-            <div className="flex items-center gap-2">
-              <User className="w-4 h-4 text-slate-500" />
-              <span className="text-sm text-slate-600">Reporter:</span>
-              <img 
-                src={ticket.reporter.avatar} 
-                alt={ticket.reporter.name}
-                className="w-6 h-6 rounded-full object-cover"
-              />
-              <span className="text-sm font-medium text-slate-900">{ticket.reporter.name}</span>
-            </div>
-            
-            <div className="flex items-center gap-2">
-              <User className="w-4 h-4 text-slate-500" />
-              <span className="text-sm text-slate-600">Assignee:</span>
-              <img 
-                src={ticket.assignee.avatar} 
-                alt={ticket.assignee.name}
-                className="w-6 h-6 rounded-full object-cover"
-              />
-              <span className="text-sm font-medium text-slate-900">{ticket.assignee.name}</span>
-            </div>
-          </div>
+          <h1 className="text-2xl font-bold text-slate-900">{ticket.title}</h1>
         </div>
       </div>
     </div>
