@@ -35,43 +35,37 @@ const TicketStatus = ({ status, created, updated, dueDate }: TicketStatusProps) 
     <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-6">
       <h3 className="text-lg font-semibold text-slate-900 mb-4">Status & Details</h3>
       
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        {/* Status Section */}
-        <div className="space-y-3">
-          <div>
-            <label className="text-sm font-medium text-slate-600">Status</label>
-            <div className="mt-1">
-              <span className={`inline-flex px-3 py-1 rounded-full text-sm font-medium ${getStatusColor(status)}`}>
-                {status}
-              </span>
-            </div>
+      {/* Status in its own row */}
+      <div className="mb-4">
+        <label className="text-sm font-medium text-slate-600 block mb-2">Status</label>
+        <span className={`inline-flex px-3 py-1 rounded-full text-sm font-medium ${getStatusColor(status)}`}>
+          {status}
+        </span>
+      </div>
+
+      {/* Dates in a compact grid */}
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+        <div>
+          <label className="text-sm font-medium text-slate-600 block mb-1">Created</label>
+          <div className="flex items-center gap-2">
+            <Calendar className="w-4 h-4 text-slate-400" />
+            <span className="text-sm text-slate-900">{formatDate(created)}</span>
           </div>
         </div>
-
-        {/* Dates Section */}
-        <div className="space-y-3">
-          <div>
-            <label className="text-sm font-medium text-slate-600">Created</label>
-            <div className="mt-1 flex items-center gap-2">
-              <Calendar className="w-4 h-4 text-slate-400" />
-              <span className="text-sm text-slate-900">{formatDate(created)}</span>
-            </div>
+        
+        <div>
+          <label className="text-sm font-medium text-slate-600 block mb-1">Last Updated</label>
+          <div className="flex items-center gap-2">
+            <Clock className="w-4 h-4 text-slate-400" />
+            <span className="text-sm text-slate-900">{formatDate(updated)}</span>
           </div>
-          
-          <div>
-            <label className="text-sm font-medium text-slate-600">Last Updated</label>
-            <div className="mt-1 flex items-center gap-2">
-              <Clock className="w-4 h-4 text-slate-400" />
-              <span className="text-sm text-slate-900">{formatDate(updated)}</span>
-            </div>
-          </div>
-          
-          <div>
-            <label className="text-sm font-medium text-slate-600">Due Date</label>
-            <div className="mt-1 flex items-center gap-2">
-              <Calendar className="w-4 h-4 text-red-400" />
-              <span className="text-sm text-red-600 font-medium">{formatDate(dueDate)}</span>
-            </div>
+        </div>
+        
+        <div>
+          <label className="text-sm font-medium text-slate-600 block mb-1">Due Date</label>
+          <div className="flex items-center gap-2">
+            <Calendar className="w-4 h-4 text-red-400" />
+            <span className="text-sm text-red-600 font-medium">{formatDate(dueDate)}</span>
           </div>
         </div>
       </div>
