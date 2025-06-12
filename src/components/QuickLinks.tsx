@@ -60,34 +60,30 @@ const QuickLinks = () => {
   ];
 
   return (
-    <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-6">
-      <h3 className="text-lg font-semibold text-slate-900 mb-4">Quick Links</h3>
-      
-      <div className="space-y-3">
+    <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-4 mb-6">
+      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
         {links.map((link) => {
           const IconComponent = link.icon;
           return (
             <a
               key={link.title}
               href={link.href}
-              className="block p-3 rounded-lg border border-slate-100 hover:border-slate-200 hover:shadow-sm transition-all duration-200 group"
+              className="flex flex-col items-center p-3 rounded-lg border border-slate-100 hover:border-slate-200 hover:shadow-sm transition-all duration-200 group text-center"
             >
-              <div className="flex items-center gap-3">
-                <div className={`w-10 h-10 rounded-lg ${link.bgColor} flex items-center justify-center group-hover:scale-105 transition-transform duration-200`}>
-                  <IconComponent className={`w-5 h-5 ${link.color}`} />
+              <div className={`w-10 h-10 rounded-lg ${link.bgColor} flex items-center justify-center group-hover:scale-105 transition-transform duration-200 mb-2`}>
+                <IconComponent className={`w-5 h-5 ${link.color}`} />
+              </div>
+              
+              <div className="min-w-0 w-full">
+                <div className="flex items-center justify-center gap-1 mb-1">
+                  <h4 className="font-medium text-slate-900 group-hover:text-blue-600 transition-colors duration-200 text-sm">
+                    {link.title}
+                  </h4>
+                  <span className="text-xs font-medium text-slate-500 bg-slate-100 px-1.5 py-0.5 rounded-full">
+                    {link.count}
+                  </span>
                 </div>
-                
-                <div className="flex-1 min-w-0">
-                  <div className="flex items-center justify-between">
-                    <h4 className="font-medium text-slate-900 group-hover:text-blue-600 transition-colors duration-200">
-                      {link.title}
-                    </h4>
-                    <span className="text-xs font-medium text-slate-500 bg-slate-100 px-2 py-1 rounded-full">
-                      {link.count}
-                    </span>
-                  </div>
-                  <p className="text-sm text-slate-600 truncate">{link.description}</p>
-                </div>
+                <p className="text-xs text-slate-600 line-clamp-2 hidden sm:block">{link.description}</p>
               </div>
             </a>
           );

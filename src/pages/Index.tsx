@@ -1,3 +1,4 @@
+
 import TicketHeader from "../components/TicketHeader";
 import TicketStatus from "../components/TicketStatus";
 import ActionItem from "../components/ActionItem";
@@ -64,8 +65,11 @@ const Index = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50">
       <div className="container mx-auto px-4 py-8 max-w-7xl">
+        {/* Top Navigation Rail */}
+        <QuickLinks />
+
         {/* Main Content Grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mt-6">
           {/* Left Column - Main Info */}
           <div className="lg:col-span-2 space-y-6">
             {/* Header with Status and Priority */}
@@ -95,10 +99,8 @@ const Index = () => {
             <TicketTimeline />
           </div>
 
-          {/* Right Column - Quick Links */}
+          {/* Right Column - Team Members */}
           <div className="space-y-6">
-            <QuickLinks />
-            
             {/* Team Members */}
             <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-6">
               <h3 className="text-lg font-semibold text-slate-900 mb-4">Team Members</h3>
