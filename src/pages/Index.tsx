@@ -38,7 +38,7 @@ const Index = () => {
         avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150"
       },
       dueDate: "2024-06-13T17:00:00Z",
-      status: "pending"
+      status: "pending" as const
     },
     {
       id: 2,
@@ -48,7 +48,7 @@ const Index = () => {
         avatar: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=150"
       },
       dueDate: "2024-06-14T12:00:00Z",
-      status: "waiting"
+      status: "waiting" as const
     },
     {
       id: 3,
@@ -58,7 +58,7 @@ const Index = () => {
         avatar: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150"
       },
       dueDate: "2024-06-15T15:00:00Z",
-      status: "upcoming"
+      status: "upcoming" as const
     }
   ];
 
