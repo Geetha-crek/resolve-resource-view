@@ -15,6 +15,7 @@ import Discussions from "./pages/Discussions";
 import Timeline from "./pages/Timeline";
 import RelatedTickets from "./pages/RelatedTickets";
 import ExternalLinks from "./pages/ExternalLinks";
+import Dashboard from "./pages/Dashboard";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -38,6 +39,7 @@ const App = () => (
             <Route path="/timeline" element={<Timeline />} />
             <Route path="/related-tickets" element={<RelatedTickets />} />
             <Route path="/external-links" element={<ExternalLinks />} />
+            <Route path="/dashboard" element={<Dashboard />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>

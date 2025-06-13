@@ -1,6 +1,6 @@
 
 import { Link, useLocation } from "react-router-dom";
-import { Menu, TicketCheck, Users, Home } from "lucide-react";
+import { Menu, TicketCheck, Users, Home, BarChart3 } from "lucide-react";
 import { useState } from "react";
 
 const Header = () => {
@@ -9,6 +9,7 @@ const Header = () => {
 
   const navigation = [
     { name: "Dashboard", href: "/", icon: Home },
+    { name: "Analytics", href: "/dashboard", icon: BarChart3 },
     { name: "Cases", href: "/cases", icon: TicketCheck },
     { name: "Manage Users", href: "/users", icon: Users },
   ];
