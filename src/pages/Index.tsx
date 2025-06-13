@@ -64,64 +64,62 @@ const Index = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50">
-      <div className="container mx-auto px-4 py-8 max-w-7xl">
-        {/* Header with Status and Priority */}
-        <div className="mb-6">
-          <TicketHeader ticket={ticketData} />
+    <div className="container mx-auto px-4 py-8 max-w-7xl">
+      {/* Header with Status and Priority */}
+      <div className="mb-6">
+        <TicketHeader ticket={ticketData} />
+      </div>
+
+      {/* Navigation Links */}
+      <div className="mb-6">
+        <QuickLinks activeSection={activeSection} onSectionChange={setActiveSection} />
+      </div>
+
+      {/* Main Content Grid */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        {/* Left Column - Dynamic Content */}
+        <div className="lg:col-span-2">
+          <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-6">
+            <DynamicContent activeSection={activeSection} />
+          </div>
         </div>
 
-        {/* Navigation Links */}
-        <div className="mb-6">
-          <QuickLinks activeSection={activeSection} onSectionChange={setActiveSection} />
-        </div>
-
-        {/* Main Content Grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          {/* Left Column - Dynamic Content */}
-          <div className="lg:col-span-2">
-            <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-6">
-              <DynamicContent activeSection={activeSection} />
+        {/* Right Column - Actions and Team Members */}
+        <div className="space-y-6">
+          {/* Current Actions */}
+          <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-6">
+            <h3 className="text-lg font-semibold text-slate-900 mb-4">Current Actions</h3>
+            <div className="space-y-4">
+              {currentActions.map((action) => (
+                <ActionItem key={action.id} action={action} />
+              ))}
             </div>
           </div>
 
-          {/* Right Column - Actions and Team Members */}
-          <div className="space-y-6">
-            {/* Current Actions */}
-            <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-6">
-              <h3 className="text-lg font-semibold text-slate-900 mb-4">Current Actions</h3>
-              <div className="space-y-4">
-                {currentActions.map((action) => (
-                  <ActionItem key={action.id} action={action} />
-                ))}
-              </div>
-            </div>
-
-            {/* Team Members */}
-            <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-6">
-              <h3 className="text-lg font-semibold text-slate-900 mb-4">Team Members</h3>
-              <div className="space-y-3">
-                <div className="flex items-center gap-3">
-                  <img 
-                    src={ticketData.reporter.avatar} 
-                    alt={ticketData.reporter.name}
-                    className="w-10 h-10 rounded-full object-cover"
-                  />
-                  <div>
-                    <p className="font-medium text-slate-900">{ticketData.reporter.name}</p>
-                    <p className="text-sm text-slate-500">{ticketData.reporter.role}</p>
-                  </div>
+          {/* Team Members */}
+          <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-6">
+            <h3 className="text-lg font-semibold text-slate-900 mb-4">Team Members</h3>
+            <div className="space-y-3">
+              <div className="flex items-center gap-3">
+                <img 
+                  src={ticketData.reporter.avatar} 
+                  alt={ticketData.reporter.name}
+                  className="w-10 h-10 rounded-full object-cover"
+                />
+                <div>
+                  <p className="font-medium text-slate-900">{ticketData.reporter.name}</p>
+                  <p className="text-sm text-slate-500">{ticketData.reporter.role}</p>
                 </div>
-                <div className="flex items-center gap-3">
-                  <img 
-                    src={ticketData.assignee.avatar} 
-                    alt={ticketData.assignee.name}
-                    className="w-10 h-10 rounded-full object-cover"
-                  />
-                  <div>
-                    <p className="font-medium text-slate-900">{ticketData.assignee.name}</p>
-                    <p className="text-sm text-slate-500">{ticketData.assignee.role}</p>
-                  </div>
+              </div>
+              <div className="flex items-center gap-3">
+                <img 
+                  src={ticketData.assignee.avatar} 
+                  alt={ticketData.assignee.name}
+                  className="w-10 h-10 rounded-full object-cover"
+                />
+                <div>
+                  <p className="font-medium text-slate-900">{ticketData.assignee.name}</p>
+                  <p className="text-sm text-slate-500">{ticketData.assignee.role}</p>
                 </div>
               </div>
             </div>
