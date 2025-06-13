@@ -1,16 +1,17 @@
 
+import { useState } from "react";
 import TicketHeader from "../components/TicketHeader";
-import TicketStatus from "../components/TicketStatus";
 import ActionItem from "../components/ActionItem";
 import QuickLinks from "../components/QuickLinks";
-import TicketTimeline from "../components/TicketTimeline";
+import DynamicContent from "../components/DynamicContent";
 
 const Index = () => {
+  const [activeSection, setActiveSection] = useState("documents");
+
   // Mock ticket data
   const ticketData = {
     id: "TICKET-1247",
     title: "Implement user authentication system with OAuth integration",
-    description: "Create a comprehensive authentication system that supports multiple OAuth providers including Google, GitHub, and Microsoft. The system should include proper session management, role-based access control, and security best practices.",
     reporter: {
       name: "Sarah Chen",
       avatar: "https://images.unsplash.com/photo-1494790108755-2616b612b47c?w=150",
@@ -65,26 +66,27 @@ const Index = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50">
       <div className="container mx-auto px-4 py-8 max-w-7xl">
-        {/* Top Navigation Rail */}
-        <QuickLinks />
+        {/* Header with Status and Priority */}
+        <div className="mb-6">
+          <TicketHeader ticket={ticketData} />
+        </div>
+
+        {/* Navigation Links */}
+        <div className="mb-6">
+          <QuickLinks activeSection={activeSection} onSectionChange={setActiveSection} />
+        </div>
 
         {/* Main Content Grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mt-6">
-          {/* Left Column - Main Info */}
-          <div className="lg:col-span-2 space-y-6">
-            {/* Header with Status and Priority */}
-            <div className="space-y-6">
-              <TicketHeader ticket={ticketData} />
-              <TicketStatus 
-                status={ticketData.status}
-                priority={ticketData.priority}
-                urgency={ticketData.urgency}
-                created={ticketData.created}
-                updated={ticketData.updated}
-                dueDate={ticketData.dueDate}
-              />
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          {/* Left Column - Dynamic Content */}
+          <div className="lg:col-span-2">
+            <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-6">
+              <DynamicContent activeSection={activeSection} />
             </div>
+          </div>
 
+          {/* Right Column - Actions and Team Members */}
+          <div className="space-y-6">
             {/* Current Actions */}
             <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-6">
               <h3 className="text-lg font-semibold text-slate-900 mb-4">Current Actions</h3>
@@ -95,12 +97,6 @@ const Index = () => {
               </div>
             </div>
 
-            {/* Timeline */}
-            <TicketTimeline />
-          </div>
-
-          {/* Right Column - Team Members */}
-          <div className="space-y-6">
             {/* Team Members */}
             <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-6">
               <h3 className="text-lg font-semibold text-slate-900 mb-4">Team Members</h3>
