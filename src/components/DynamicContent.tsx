@@ -1,11 +1,22 @@
 
-import { FileText, Plus, User, MessageSquare, Clock, TicketCheck, ExternalLink } from "lucide-react";
+import React, { useState } from 'react';
+import { FileText, Plus, User, MessageSquare, Clock, CheckSquare } from "lucide-react";
+import { FileUploadDialog } from './FileUploadDialog';
+import { ChatInterface } from './ChatInterface';
+import { useNavigate } from 'react-router-dom';
 
 interface DynamicContentProps {
   activeSection: string;
+  actions?: any[];
+  teamMembers?: any[];
 }
 
-const DynamicContent = ({ activeSection }: DynamicContentProps) => {
+const DynamicContent = ({ activeSection, actions = [], teamMembers = [] }: DynamicContentProps) => {
+  const [uploadDialogOpen, setUploadDialogOpen] = useState(false);
+  const [chatDialogOpen, setChatDialogOpen] = useState(false);
+  const [selectedDiscussion, setSelectedDiscussion] = useState<any>(null);
+  const navigate = useNavigate();
+
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString('en-US', {
       month: 'short',
@@ -15,11 +26,23 @@ const DynamicContent = ({ activeSection }: DynamicContentProps) => {
     });
   };
 
+  const openChat = (discussion: any) => {
+    setSelectedDiscussion(discussion);
+    setChatDialogOpen(true);
+  };
+
+  const openNoteForm = () => {
+    navigate('/case-form?type=Note');
+  };
+
   const renderDocuments = () => (
     <div className="space-y-4">
       <div className="flex justify-between items-center">
         <h3 className="text-lg font-semibold text-slate-900">Documents</h3>
-        <button className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors flex items-center gap-2">
+        <button 
+          onClick={() => setUploadDialogOpen(true)}
+          className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors flex items-center gap-2"
+        >
           <Plus className="w-4 h-4" />
           Upload Document
         </button>
@@ -42,7 +65,10 @@ const DynamicContent = ({ activeSection }: DynamicContentProps) => {
     <div className="space-y-4">
       <div className="flex justify-between items-center">
         <h3 className="text-lg font-semibold text-slate-900">Notes</h3>
-        <button className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors flex items-center gap-2">
+        <button 
+          onClick={openNoteForm}
+          className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors flex items-center gap-2"
+        >
           <Plus className="w-4 h-4" />
           Add Note
         </button>
@@ -66,29 +92,77 @@ const DynamicContent = ({ activeSection }: DynamicContentProps) => {
     </div>
   );
 
-  const renderDiscussions = () => (
-    <div className="space-y-4">
-      <div className="flex justify-between items-center">
-        <h3 className="text-lg font-semibold text-slate-900">Discussions</h3>
-        <button className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors flex items-center gap-2">
-          <MessageSquare className="w-4 h-4" />
-          Start Discussion
-        </button>
-      </div>
-      {[1, 2, 3].map((discussion) => (
-        <div key={discussion} className="border border-slate-200 rounded-lg p-4">
-          <div className="flex items-start gap-3">
-            <MessageSquare className="w-5 h-5 text-purple-600 mt-1" />
-            <div className="flex-1">
-              <h4 className="font-medium text-slate-900">OAuth Implementation Approach {discussion}</h4>
-              <p className="text-sm text-slate-500 mb-2">Started by Alex Rodriguez • 3 replies</p>
-              <p className="text-slate-700">Discussion about the best approach for implementing OAuth...</p>
+  const renderDiscussions = () => {
+    const discussions = [
+      {
+        id: 1,
+        title: "OAuth Implementation Approach",
+        content: "Discussion about the best approach for implementing OAuth...",
+        replies: 3,
+        author: "Alex Rodriguez",
+        messages: [
+          {
+            id: 1,
+            author: "Alex Rodriguez",
+            avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150",
+            content: "I think we should start with Google OAuth first since it has the best documentation.",
+            timestamp: "2024-06-12T10:00:00Z"
+          },
+          {
+            id: 2,
+            author: "Sarah Chen",
+            avatar: "https://images.unsplash.com/photo-1494790108755-2616b612b47c?w=150",
+            content: "Agreed, but we should also consider GitHub OAuth for developer-focused features.",
+            timestamp: "2024-06-12T10:15:00Z"
+          }
+        ]
+      },
+      {
+        id: 2,
+        title: "Security Review Requirements",
+        content: "Planning the security review process...",
+        replies: 5,
+        author: "Maria Garcia", 
+        messages: [
+          {
+            id: 1,
+            author: "Maria Garcia",
+            avatar: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=150",
+            content: "We need to ensure all OAuth flows are properly secured and follow best practices.",
+            timestamp: "2024-06-12T11:00:00Z"
+          }
+        ]
+      }
+    ];
+
+    return (
+      <div className="space-y-4">
+        <div className="flex justify-between items-center">
+          <h3 className="text-lg font-semibold text-slate-900">Discussions</h3>
+          <button className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors flex items-center gap-2">
+            <MessageSquare className="w-4 h-4" />
+            Start Discussion
+          </button>
+        </div>
+        {discussions.map((discussion) => (
+          <div 
+            key={discussion.id} 
+            className="border border-slate-200 rounded-lg p-4 hover:bg-slate-50 cursor-pointer transition-colors"
+            onClick={() => openChat(discussion)}
+          >
+            <div className="flex items-start gap-3">
+              <MessageSquare className="w-5 h-5 text-purple-600 mt-1" />
+              <div className="flex-1">
+                <h4 className="font-medium text-slate-900">{discussion.title}</h4>
+                <p className="text-sm text-slate-500 mb-2">Started by {discussion.author} • {discussion.replies} replies</p>
+                <p className="text-slate-700">{discussion.content}</p>
+              </div>
             </div>
           </div>
-        </div>
-      ))}
-    </div>
-  );
+        ))}
+      </div>
+    );
+  };
 
   const renderTimeline = () => (
     <div className="space-y-4">
@@ -110,19 +184,33 @@ const DynamicContent = ({ activeSection }: DynamicContentProps) => {
     </div>
   );
 
-  const renderRelatedTickets = () => (
+  const renderActions = () => (
     <div className="space-y-4">
-      <h3 className="text-lg font-semibold text-slate-900">Related Tickets</h3>
-      {[1, 2, 3].map((ticket) => (
-        <div key={ticket} className="border border-slate-200 rounded-lg p-4 hover:bg-slate-50">
+      <h3 className="text-lg font-semibold text-slate-900">Current Actions</h3>
+      {actions.map((action) => (
+        <div key={action.id} className="border border-slate-200 rounded-lg p-4">
           <div className="flex items-start gap-3">
-            <TicketCheck className="w-5 h-5 text-red-600 mt-1" />
+            <CheckSquare className="w-5 h-5 text-red-600 mt-1" />
             <div className="flex-1">
-              <h4 className="font-medium text-slate-900">TICKET-124{ticket}</h4>
-              <p className="text-sm text-slate-500 mb-1">Setup OAuth redirect URLs</p>
-              <span className="inline-flex px-2 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800">
-                Completed
-              </span>
+              <h4 className="font-medium text-slate-900">{action.title}</h4>
+              <div className="flex items-center gap-4 mt-2">
+                <div className="flex items-center gap-2">
+                  <img 
+                    src={action.assignee.avatar} 
+                    alt={action.assignee.name}
+                    className="w-6 h-6 rounded-full object-cover"
+                  />
+                  <span className="text-sm text-slate-600">{action.assignee.name}</span>
+                </div>
+                <span className="text-sm text-slate-500">Due: {formatDate(action.dueDate)}</span>
+                <span className={`px-2 py-1 rounded-full text-xs font-medium ${
+                  action.status === 'pending' ? 'bg-yellow-100 text-yellow-800' :
+                  action.status === 'waiting' ? 'bg-orange-100 text-orange-800' :
+                  'bg-gray-100 text-gray-800'
+                }`}>
+                  {action.status}
+                </span>
+              </div>
             </div>
           </div>
         </div>
@@ -130,26 +218,20 @@ const DynamicContent = ({ activeSection }: DynamicContentProps) => {
     </div>
   );
 
-  const renderExternalLinks = () => (
+  const renderTeam = () => (
     <div className="space-y-4">
-      <div className="flex justify-between items-center">
-        <h3 className="text-lg font-semibold text-slate-900">External Links</h3>
-        <button className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors flex items-center gap-2">
-          <Plus className="w-4 h-4" />
-          Add Link
-        </button>
-      </div>
-      {[
-        { title: "OAuth 2.0 Documentation", url: "https://oauth.net/2/" },
-        { title: "Google OAuth Guide", url: "https://developers.google.com/identity/protocols/oauth2" },
-        { title: "GitHub OAuth Apps", url: "https://docs.github.com/en/developers/apps/building-oauth-apps" }
-      ].map((link, index) => (
-        <div key={index} className="border border-slate-200 rounded-lg p-4 hover:bg-slate-50">
+      <h3 className="text-lg font-semibold text-slate-900">Team Members</h3>
+      {teamMembers.map((member, index) => (
+        <div key={index} className="border border-slate-200 rounded-lg p-4">
           <div className="flex items-center gap-3">
-            <ExternalLink className="w-5 h-5 text-indigo-600" />
-            <div className="flex-1">
-              <h4 className="font-medium text-slate-900">{link.title}</h4>
-              <p className="text-sm text-slate-500">{link.url}</p>
+            <img 
+              src={member.avatar} 
+              alt={member.name}
+              className="w-10 h-10 rounded-full object-cover"
+            />
+            <div>
+              <p className="font-medium text-slate-900">{member.name}</p>
+              <p className="text-sm text-slate-500">{member.role}</p>
             </div>
           </div>
         </div>
@@ -157,22 +239,44 @@ const DynamicContent = ({ activeSection }: DynamicContentProps) => {
     </div>
   );
 
-  switch (activeSection) {
-    case 'documents':
-      return renderDocuments();
-    case 'notes':
-      return renderNotes();
-    case 'discussions':
-      return renderDiscussions();
-    case 'timeline':
-      return renderTimeline();
-    case 'related-tickets':
-      return renderRelatedTickets();
-    case 'external-links':
-      return renderExternalLinks();
-    default:
-      return renderDocuments();
-  }
+  const renderContent = () => {
+    switch (activeSection) {
+      case 'documents':
+        return renderDocuments();
+      case 'notes':
+        return renderNotes();
+      case 'discussions':
+        return renderDiscussions();
+      case 'timeline':
+        return renderTimeline();
+      case 'actions':
+        return renderActions();
+      case 'team':
+        return renderTeam();
+      default:
+        return renderDocuments();
+    }
+  };
+
+  return (
+    <>
+      {renderContent()}
+      
+      <FileUploadDialog 
+        open={uploadDialogOpen}
+        onOpenChange={setUploadDialogOpen}
+      />
+      
+      {selectedDiscussion && (
+        <ChatInterface
+          open={chatDialogOpen}
+          onOpenChange={setChatDialogOpen}
+          discussionTitle={selectedDiscussion.title}
+          messages={selectedDiscussion.messages}
+        />
+      )}
+    </>
+  );
 };
 
 export default DynamicContent;

@@ -1,12 +1,14 @@
 
-import { FileText, Link, Calendar, Users, TicketCheck } from "lucide-react";
+import { FileText, Calendar, Users, CheckSquare, User } from "lucide-react";
 
 interface QuickLinksProps {
   activeSection: string;
   onSectionChange: (section: string) => void;
+  actions: any[];
+  teamMembers: any[];
 }
 
-const QuickLinks = ({ activeSection, onSectionChange }: QuickLinksProps) => {
+const QuickLinks = ({ activeSection, onSectionChange, actions, teamMembers }: QuickLinksProps) => {
   const links = [
     {
       id: "documents",
@@ -41,18 +43,18 @@ const QuickLinks = ({ activeSection, onSectionChange }: QuickLinksProps) => {
       bgColor: "bg-orange-50"
     },
     {
-      id: "related-tickets",
-      title: "Related Tickets",
-      icon: TicketCheck,
-      count: 3,
+      id: "actions",
+      title: "Actions",
+      icon: CheckSquare,
+      count: actions.length,
       color: "text-red-600",
       bgColor: "bg-red-50"
     },
     {
-      id: "external-links",
-      title: "External Links",
-      icon: Link,
-      count: 6,
+      id: "team",
+      title: "Team",
+      icon: User,
+      count: teamMembers.length,
       color: "text-indigo-600",
       bgColor: "bg-indigo-50"
     }
