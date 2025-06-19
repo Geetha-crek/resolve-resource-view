@@ -83,9 +83,9 @@ const CaseForm = () => {
                   conditionalRules: [
                     {
                       fieldId: 'priority',
-                      operator: 'equals',
+                      operator: 'equals' as const,
                       value: 'Critical',
-                      action: 'show'
+                      action: 'show' as const
                     }
                   ]
                 },
@@ -97,9 +97,9 @@ const CaseForm = () => {
                   conditionalRules: [
                     {
                       fieldId: 'priority',
-                      operator: 'equals',
+                      operator: 'equals' as const,
                       value: 'Critical',
-                      action: 'show'
+                      action: 'show' as const
                     }
                   ]
                 }
@@ -133,15 +133,15 @@ const CaseForm = () => {
                   conditionalRules: [
                     {
                       fieldId: 'priority',
-                      operator: 'equals',
+                      operator: 'equals' as const,
                       value: 'High',
-                      action: 'show'
+                      action: 'show' as const
                     },
                     {
                       fieldId: 'priority',
-                      operator: 'equals',
+                      operator: 'equals' as const,
                       value: 'Critical',
-                      action: 'show'
+                      action: 'show' as const
                     }
                   ]
                 }
@@ -165,9 +165,9 @@ const CaseForm = () => {
                   conditionalRules: [
                     {
                       fieldId: 'priority',
-                      operator: 'equals',
+                      operator: 'equals' as const,
                       value: 'Critical',
-                      action: 'show'
+                      action: 'show' as const
                     }
                   ]
                 },
