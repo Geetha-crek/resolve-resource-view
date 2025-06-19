@@ -1,4 +1,3 @@
-
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -17,6 +16,7 @@ import RelatedTickets from "./pages/RelatedTickets";
 import ExternalLinks from "./pages/ExternalLinks";
 import Dashboard from "./pages/Dashboard";
 import NotFound from "./pages/NotFound";
+import CaseForm from "./pages/CaseForm";
 
 const queryClient = new QueryClient();
 
@@ -30,6 +30,7 @@ const App = () => (
           <Routes>
             <Route path="/" element={<Index />} />
             <Route path="/cases" element={<Cases />} />
+            <Route path="/cases/new" element={<CaseForm />} />
             <Route path="/users" element={<Users />} />
             <Route path="/users/new" element={<UserForm />} />
             <Route path="/users/edit/:id" element={<UserForm />} />
@@ -38,7 +39,7 @@ const App = () => (
             <Route path="/discussions" element={<Discussions />} />
             <Route path="/timeline" element={<Timeline />} />
             <Route path="/related-tickets" element={<RelatedTickets />} />
-            <Route path="/external-links" element={<ExternalLinks />} />
+            <Route path="/external-links" element={<ExternalLinks />}  />
             <Route path="/dashboard" element={<Dashboard />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />

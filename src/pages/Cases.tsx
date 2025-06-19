@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Search, Filter, Download, Plus, Eye, ChevronDown } from "lucide-react";
 import { Link } from "react-router-dom";
@@ -150,7 +149,8 @@ const Cases = () => {
 
   const handleNewCase = (type: string) => {
     console.log(`Creating new ${type} case`);
-    // TODO: Navigate to case creation form with pre-selected type
+    // Navigate to case creation form with pre-selected type
+    window.location.href = `/cases/new?type=${encodeURIComponent(type)}`;
   };
 
   return (
