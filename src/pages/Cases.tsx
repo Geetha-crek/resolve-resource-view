@@ -1,13 +1,21 @@
 
 import { useState } from "react";
-import { Search, Filter, Download, Plus, Eye } from "lucide-react";
+import { Search, Filter, Download, Plus, Eye, ChevronDown } from "lucide-react";
 import { Link } from "react-router-dom";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { Button } from "@/components/ui/button";
 
 interface Case {
   id: string;
   title: string;
   status: "Open" | "In Progress" | "Resolved" | "Closed";
   priority: "Low" | "Medium" | "High" | "Critical";
+  type: "Bug" | "Feature Request" | "Support" | "Enhancement" | "Documentation";
   reporter: string;
   assignee: string;
   created: string;
@@ -18,14 +26,18 @@ const Cases = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState("All");
   const [priorityFilter, setPriorityFilter] = useState("All");
+  const [typeFilter, setTypeFilter] = useState("All");
 
-  // Mock cases data
+  const ticketTypes = ["Bug", "Feature Request", "Support", "Enhancement", "Documentation"];
+
+  // Mock cases data with ticket types
   const cases: Case[] = [
     {
       id: "TICKET-1247",
       title: "Implement user authentication system with OAuth integration",
       status: "In Progress",
       priority: "High",
+      type: "Feature Request",
       reporter: "Sarah Chen",
       assignee: "Alex Rodriguez",
       created: "2024-06-10",
@@ -36,6 +48,7 @@ const Cases = () => {
       title: "Fix payment gateway integration issues",
       status: "Open",
       priority: "Critical",
+      type: "Bug",
       reporter: "John Smith",
       assignee: "Maria Garcia",
       created: "2024-06-11",
@@ -46,10 +59,33 @@ const Cases = () => {
       title: "Update user interface for mobile responsiveness",
       status: "Resolved",
       priority: "Medium",
+      type: "Enhancement",
       reporter: "Emily Davis",
       assignee: "David Kim",
       created: "2024-06-08",
       updated: "2024-06-13"
+    },
+    {
+      id: "TICKET-1250",
+      title: "Add API documentation for new endpoints",
+      status: "Open",
+      priority: "Low",
+      type: "Documentation",
+      reporter: "Mike Johnson",
+      assignee: "Sarah Chen",
+      created: "2024-06-12",
+      updated: "2024-06-12"
+    },
+    {
+      id: "TICKET-1251",
+      title: "User unable to reset password",
+      status: "In Progress",
+      priority: "Medium",
+      type: "Support",
+      reporter: "Lisa Brown",
+      assignee: "Alex Rodriguez",
+      created: "2024-06-13",
+      updated: "2024-06-14"
     }
   ];
 
@@ -73,20 +109,32 @@ const Cases = () => {
     }
   };
 
+  const getTypeColor = (type: string) => {
+    switch (type) {
+      case 'Bug': return 'bg-red-100 text-red-800';
+      case 'Feature Request': return 'bg-purple-100 text-purple-800';
+      case 'Support': return 'bg-blue-100 text-blue-800';
+      case 'Enhancement': return 'bg-green-100 text-green-800';
+      case 'Documentation': return 'bg-yellow-100 text-yellow-800';
+      default: return 'bg-slate-100 text-slate-800';
+    }
+  };
+
   const filteredCases = cases.filter(case_ => {
     const matchesSearch = case_.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
                          case_.id.toLowerCase().includes(searchTerm.toLowerCase());
     const matchesStatus = statusFilter === "All" || case_.status === statusFilter;
     const matchesPriority = priorityFilter === "All" || case_.priority === priorityFilter;
+    const matchesType = typeFilter === "All" || case_.type === typeFilter;
     
-    return matchesSearch && matchesStatus && matchesPriority;
+    return matchesSearch && matchesStatus && matchesPriority && matchesType;
   });
 
   const exportCases = () => {
     const csvContent = [
-      ["ID", "Title", "Status", "Priority", "Reporter", "Assignee", "Created", "Updated"],
+      ["ID", "Title", "Status", "Priority", "Type", "Reporter", "Assignee", "Created", "Updated"],
       ...filteredCases.map(case_ => [
-        case_.id, case_.title, case_.status, case_.priority,
+        case_.id, case_.title, case_.status, case_.priority, case_.type,
         case_.reporter, case_.assignee, case_.created, case_.updated
       ])
     ].map(row => row.join(",")).join("\n");
@@ -100,6 +148,11 @@ const Cases = () => {
     window.URL.revokeObjectURL(url);
   };
 
+  const handleNewCase = (type: string) => {
+    console.log(`Creating new ${type} case`);
+    // TODO: Navigate to case creation form with pre-selected type
+  };
+
   return (
     <div className="container mx-auto px-4 py-8 max-w-7xl">
       <div className="bg-white rounded-xl shadow-sm border border-slate-200">
@@ -111,17 +164,35 @@ const Cases = () => {
               <p className="text-slate-600 mt-1">Manage and track all support cases</p>
             </div>
             <div className="flex gap-2">
-              <button
+              <Button
                 onClick={exportCases}
-                className="flex items-center gap-2 px-4 py-2 bg-slate-100 text-slate-700 rounded-md hover:bg-slate-200 transition-colors"
+                variant="outline"
+                className="flex items-center gap-2"
               >
                 <Download className="w-4 h-4" />
                 Export
-              </button>
-              <button className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors">
-                <Plus className="w-4 h-4" />
-                New Case
-              </button>
+              </Button>
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button className="flex items-center gap-2">
+                    <Plus className="w-4 h-4" />
+                    New Case
+                    <ChevronDown className="w-4 h-4" />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end" className="w-48">
+                  {ticketTypes.map((type) => (
+                    <DropdownMenuItem
+                      key={type}
+                      onClick={() => handleNewCase(type)}
+                      className="cursor-pointer"
+                    >
+                      <Plus className="w-4 h-4 mr-2" />
+                      {type}
+                    </DropdownMenuItem>
+                  ))}
+                </DropdownMenuContent>
+              </DropdownMenu>
             </div>
           </div>
         </div>
@@ -142,7 +213,18 @@ const Cases = () => {
               </div>
             </div>
             
-            <div className="flex gap-4">
+            <div className="flex gap-4 flex-wrap">
+              <select
+                value={typeFilter}
+                onChange={(e) => setTypeFilter(e.target.value)}
+                className="px-3 py-2 border border-slate-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              >
+                <option value="All">All Types</option>
+                {ticketTypes.map(type => (
+                  <option key={type} value={type}>{type}</option>
+                ))}
+              </select>
+              
               <select
                 value={statusFilter}
                 onChange={(e) => setStatusFilter(e.target.value)}
@@ -177,6 +259,7 @@ const Cases = () => {
               <tr>
                 <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Case ID</th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Title</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Type</th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Status</th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Priority</th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Assignee</th>
@@ -194,6 +277,11 @@ const Cases = () => {
                     <div className="text-sm font-medium text-slate-900 max-w-xs truncate">
                       {case_.title}
                     </div>
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap">
+                    <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${getTypeColor(case_.type)}`}>
+                      {case_.type}
+                    </span>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
                     <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${getStatusColor(case_.status)}`}>
