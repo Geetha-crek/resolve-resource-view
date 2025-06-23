@@ -7,6 +7,7 @@ import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { DynamicFormConfig, ConditionalRule } from '@/types/dynamicForm';
 import { DynamicFormPage } from './DynamicFormPage';
 import { useToast } from '@/hooks/use-toast';
+import { useTranslation } from '../../hooks/useTranslation';
 
 interface DynamicFormProps {
   config: DynamicFormConfig;
@@ -17,6 +18,7 @@ export const DynamicForm: React.FC<DynamicFormProps> = ({ config, onSuccess }) =
   const [currentPageIndex, setCurrentPageIndex] = useState(0);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { toast } = useToast();
+  const { t } = useTranslation();
   
   const methods = useForm({
     mode: 'onChange',
@@ -76,7 +78,7 @@ export const DynamicForm: React.FC<DynamicFormProps> = ({ config, onSuccess }) =
 
       if (response.ok) {
         toast({
-          title: "Success",
+          title: t('common.success'),
           description: config.submitConfig.onSuccess.message,
         });
         
@@ -90,7 +92,7 @@ export const DynamicForm: React.FC<DynamicFormProps> = ({ config, onSuccess }) =
       }
     } catch (error) {
       toast({
-        title: "Error",
+        title: t('common.error'),
         description: config.submitConfig.onError.message,
         variant: "destructive",
       });
@@ -124,7 +126,7 @@ export const DynamicForm: React.FC<DynamicFormProps> = ({ config, onSuccess }) =
                 <CardDescription>{config.description}</CardDescription>
               )}
               <div className="flex justify-between items-center text-sm text-slate-600">
-                <span>Page {currentPageIndex + 1} of {visiblePages.length}</span>
+                <span>{t('form.pageOf', { current: currentPageIndex + 1, total: visiblePages.length })}</span>
                 <div className="w-full max-w-xs bg-slate-200 rounded-full h-2 ml-4">
                   <div 
                     className="bg-blue-600 h-2 rounded-full transition-all duration-300"
@@ -149,16 +151,16 @@ export const DynamicForm: React.FC<DynamicFormProps> = ({ config, onSuccess }) =
                   disabled={currentPageIndex === 0}
                 >
                   <ChevronLeft className="w-4 h-4 mr-2" />
-                  Previous
+                  {t('common.previous')}
                 </Button>
                 
                 {isLastPage ? (
                   <Button type="submit" disabled={isSubmitting}>
-                    {isSubmitting ? 'Submitting...' : 'Submit'}
+                    {isSubmitting ? t('form.submitting') : t('common.submit')}
                   </Button>
                 ) : (
                   <Button type="button" onClick={nextPage}>
-                    Next
+                    {t('common.next')}
                     <ChevronRight className="w-4 h-4 ml-2" />
                   </Button>
                 )}

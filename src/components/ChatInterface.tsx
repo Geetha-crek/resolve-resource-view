@@ -1,9 +1,9 @@
-
 import React, { useState } from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { Send, User } from 'lucide-react';
+import { useTranslation } from '../hooks/useTranslation';
 
 interface Message {
   id: number;
@@ -28,6 +28,7 @@ export const ChatInterface: React.FC<ChatInterfaceProps> = ({
 }) => {
   const [messages, setMessages] = useState<Message[]>(initialMessages);
   const [newMessage, setNewMessage] = useState('');
+  const { t } = useTranslation();
 
   const handleSendMessage = () => {
     if (newMessage.trim()) {
@@ -84,7 +85,7 @@ export const ChatInterface: React.FC<ChatInterfaceProps> = ({
           <div className="mt-4 flex gap-3">
             <div className="flex-1">
               <Textarea
-                placeholder="Type your message..."
+                placeholder={t('chat.typeMessage')}
                 value={newMessage}
                 onChange={(e) => setNewMessage(e.target.value)}
                 className="resize-none"

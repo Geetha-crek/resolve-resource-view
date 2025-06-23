@@ -1,0 +1,106 @@
+
+{
+  "common": {
+    "save": "Save",
+    "cancel": "Cancel",
+    "submit": "Submit",
+    "edit": "Edit",
+    "delete": "Delete",
+    "close": "Close",
+    "loading": "Loading...",
+    "error": "Error",
+    "success": "Success",
+    "previous": "Previous",
+    "next": "Next",
+    "required": "Required"
+  },
+  "navigation": {
+    "documents": "Documents",
+    "notes": "Notes",
+    "discussions": "Discussions",
+    "timeline": "Timeline",
+    "actions": "Actions",
+    "team": "Team"
+  },
+  "ticket": {
+    "id": "Ticket ID",
+    "title": "Title",
+    "reporter": "Reporter",
+    "assignee": "Assignee",
+    "status": "Status",
+    "priority": "Priority",
+    "urgency": "Urgency",
+    "created": "Created",
+    "updated": "Updated",
+    "dueDate": "Due Date"
+  },
+  "documents": {
+    "title": "Documents",
+    "uploadDocument": "Upload Document",
+    "dragAndDrop": "Drag and drop files here or click to browse",
+    "supportedFormats": "Supported formats: PDF, DOC, DOCX, JPG, PNG (Max 10MB each)",
+    "fileName": "File Name",
+    "description": "Description",
+    "addDescription": "Add description for this file...",
+    "removeFile": "Remove file",
+    "uploadFiles": "Upload Files"
+  },
+  "notes": {
+    "title": "Notes",
+    "addNote": "Add Note"
+  },
+  "discussions": {
+    "title": "Discussions",
+    "startDiscussion": "Start Discussion",
+    "replies": "replies",
+    "startedBy": "Started by"
+  },
+  "timeline": {
+    "title": "Timeline"
+  },
+  "actions": {
+    "title": "Current Actions",
+    "due": "Due"
+  },
+  "team": {
+    "title": "Team Members"
+  },
+  "chat": {
+    "typeMessage": "Type your message...",
+    "send": "Send"
+  },
+  "form": {
+    "createCase": "Create {{type}} Case",
+    "fillForm": "Fill out the form below to create a new {{type}} case.",
+    "basicInformation": "Basic Information",
+    "generalInformation": "General Information",
+    "caseTitle": "Case Title",
+    "enterTitle": "Enter a descriptive title",
+    "priority": "Priority",
+    "assigneeEmail": "Assignee Email",
+    "caseDetails": "Case Details",
+    "description": "Description",
+    "detailedDescription": "Detailed Description",
+    "provideDescription": "Provide a detailed description of the issue or request...",
+    "stepsToReproduce": "Steps to Reproduce",
+    "expectedBehavior": "Expected Behavior",
+    "whatShouldHappen": "What should happen?",
+    "additionalInformation": "Additional Information",
+    "affectedUsers": "Number of Affected Users",
+    "businessImpact": "Business Impact",
+    "reviewAndSubmit": "Review & Submit",
+    "reviewInformation": "Review your information and submit the case",
+    "confirmation": "Confirmation",
+    "urgentAttention": "This case requires urgent attention",
+    "notifyTeam": "Send notifications to the entire team",
+    "additionalNotes": "Additional Notes",
+    "submitting": "Submitting...",
+    "pageOf": "Page {{current}} of {{total}}"
+  },
+  "messages": {
+    "caseCreated": "{{type}} case has been created successfully!",
+    "caseCreationFailed": "Failed to create case. Please try again.",
+    "filesUploaded": "Files uploaded successfully!",
+    "uploadFailed": "Failed to upload files. Please try again."
+  }
+}

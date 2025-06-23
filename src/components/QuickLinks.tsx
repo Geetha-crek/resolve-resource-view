@@ -1,5 +1,6 @@
 
 import { FileText, Calendar, Users, CheckSquare, User } from "lucide-react";
+import { useTranslation } from "../hooks/useTranslation";
 
 interface QuickLinksProps {
   activeSection: string;
@@ -9,10 +10,12 @@ interface QuickLinksProps {
 }
 
 const QuickLinks = ({ activeSection, onSectionChange, actions, teamMembers }: QuickLinksProps) => {
+  const { t } = useTranslation();
+
   const links = [
     {
       id: "documents",
-      title: "Documents",
+      title: t("navigation.documents"),
       icon: FileText,
       count: 8,
       color: "text-blue-600",
@@ -20,7 +23,7 @@ const QuickLinks = ({ activeSection, onSectionChange, actions, teamMembers }: Qu
     },
     {
       id: "notes",
-      title: "Notes",
+      title: t("navigation.notes"),
       icon: FileText,
       count: 12,
       color: "text-green-600",
@@ -28,7 +31,7 @@ const QuickLinks = ({ activeSection, onSectionChange, actions, teamMembers }: Qu
     },
     {
       id: "discussions",
-      title: "Discussions",
+      title: t("navigation.discussions"),
       icon: Users,
       count: 5,
       color: "text-purple-600",
@@ -36,7 +39,7 @@ const QuickLinks = ({ activeSection, onSectionChange, actions, teamMembers }: Qu
     },
     {
       id: "timeline",
-      title: "Timeline",
+      title: t("navigation.timeline"),
       icon: Calendar,
       count: 24,
       color: "text-orange-600",
@@ -44,7 +47,7 @@ const QuickLinks = ({ activeSection, onSectionChange, actions, teamMembers }: Qu
     },
     {
       id: "actions",
-      title: "Actions",
+      title: t("navigation.actions"),
       icon: CheckSquare,
       count: actions.length,
       color: "text-red-600",
@@ -52,7 +55,7 @@ const QuickLinks = ({ activeSection, onSectionChange, actions, teamMembers }: Qu
     },
     {
       id: "team",
-      title: "Team",
+      title: t("navigation.team"),
       icon: User,
       count: teamMembers.length,
       color: "text-indigo-600",

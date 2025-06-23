@@ -1,0 +1,106 @@
+
+{
+  "common": {
+    "save": "Guardar",
+    "cancel": "Cancelar",
+    "submit": "Enviar",
+    "edit": "Editar",
+    "delete": "Eliminar",
+    "close": "Cerrar",
+    "loading": "Cargando...",
+    "error": "Error",
+    "success": "Éxito",
+    "previous": "Anterior",
+    "next": "Siguiente",
+    "required": "Requerido"
+  },
+  "navigation": {
+    "documents": "Documentos",
+    "notes": "Notas",
+    "discussions": "Discusiones",
+    "timeline": "Cronología",
+    "actions": "Acciones",
+    "team": "Equipo"
+  },
+  "ticket": {
+    "id": "ID del Ticket",
+    "title": "Título",
+    "reporter": "Reportador",
+    "assignee": "Asignado",
+    "status": "Estado",
+    "priority": "Prioridad",
+    "urgency": "Urgencia",
+    "created": "Creado",
+    "updated": "Actualizado",
+    "dueDate": "Fecha de Vencimiento"
+  },
+  "documents": {
+    "title": "Documentos",
+    "uploadDocument": "Subir Documento",
+    "dragAndDrop": "Arrastra y suelta archivos aquí o haz clic para navegar",
+    "supportedFormats": "Formatos compatibles: PDF, DOC, DOCX, JPG, PNG (Máx 10MB cada uno)",
+    "fileName": "Nombre del Archivo",
+    "description": "Descripción",
+    "addDescription": "Agregar descripción para este archivo...",
+    "removeFile": "Eliminar archivo",
+    "uploadFiles": "Subir Archivos"
+  },
+  "notes": {
+    "title": "Notas",
+    "addNote": "Agregar Nota"
+  },
+  "discussions": {
+    "title": "Discusiones",
+    "startDiscussion": "Iniciar Discusión",
+    "replies": "respuestas",
+    "startedBy": "Iniciado por"
+  },
+  "timeline": {
+    "title": "Cronología"
+  },
+  "actions": {
+    "title": "Acciones Actuales",
+    "due": "Vence"
+  },
+  "team": {
+    "title": "Miembros del Equipo"
+  },
+  "chat": {
+    "typeMessage": "Escribe tu mensaje...",
+    "send": "Enviar"
+  },
+  "form": {
+    "createCase": "Crear Caso {{type}}",
+    "fillForm": "Completa el formulario a continuación para crear un nuevo caso {{type}}.",
+    "basicInformation": "Información Básica",
+    "generalInformation": "Información General",
+    "caseTitle": "Título del Caso",
+    "enterTitle": "Ingresa un título descriptivo",
+    "priority": "Prioridad",
+    "assigneeEmail": "Email del Asignado",
+    "caseDetails": "Detalles del Caso",
+    "description": "Descripción",
+    "detailedDescription": "Descripción Detallada",
+    "provideDescription": "Proporciona una descripción detallada del problema o solicitud...",
+    "stepsToReproduce": "Pasos para Reproducir",
+    "expectedBehavior": "Comportamiento Esperado",
+    "whatShouldHappen": "¿Qué debería pasar?",
+    "additionalInformation": "Información Adicional",
+    "affectedUsers": "Número de Usuarios Afectados",
+    "businessImpact": "Impacto en el Negocio",
+    "reviewAndSubmit": "Revisar y Enviar",
+    "reviewInformation": "Revisa tu información y envía el caso",
+    "confirmation": "Confirmación",
+    "urgentAttention": "Este caso requiere atención urgente",
+    "notifyTeam": "Enviar notificaciones a todo el equipo",
+    "additionalNotes": "Notas Adicionales",
+    "submitting": "Enviando...",
+    "pageOf": "Página {{current}} de {{total}}"
+  },
+  "messages": {
+    "caseCreated": "¡El caso {{type}} ha sido creado exitosamente!",
+    "caseCreationFailed": "Error al crear el caso. Por favor, inténtalo de nuevo.",
+    "filesUploaded": "¡Archivos subidos exitosamente!",
+    "uploadFailed": "Error al subir archivos. Por favor, inténtalo de nuevo."
+  }
+}

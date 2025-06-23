@@ -3,33 +3,35 @@ import React from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { DynamicForm } from '@/components/forms/DynamicForm';
 import { DynamicFormConfig } from '@/types/dynamicForm';
+import { useTranslation } from '../hooks/useTranslation';
 
 const CaseForm = () => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const ticketType = searchParams.get('type') || 'Bug';
+  const { t } = useTranslation();
 
   // This would typically come from an API or configuration
   const getFormConfig = (type: string): DynamicFormConfig => {
     const baseConfig = {
       id: 'case-form',
-      title: `Create ${type} Case`,
-      description: `Fill out the form below to create a new ${type.toLowerCase()} case.`,
+      title: t('form.createCase', { type }),
+      description: t('form.fillForm', { type: type.toLowerCase() }),
       pages: [
         {
           id: 'basic-info',
-          title: 'Basic Information',
-          description: 'Provide basic details about the case',
+          title: t('form.basicInformation'),
+          description: t('form.generalInformation'),
           sections: [
             {
               id: 'general',
-              title: 'General Information',
+              title: t('form.generalInformation'),
               fields: [
                 {
                   id: 'title',
                   type: 'text' as const,
-                  label: 'Case Title',
-                  placeholder: 'Enter a descriptive title',
+                  label: t('form.caseTitle'),
+                  placeholder: t('form.enterTitle'),
                   required: true,
                   validation: {
                     minLength: 10,
@@ -39,7 +41,7 @@ const CaseForm = () => {
                 {
                   id: 'priority',
                   type: 'select' as const,
-                  label: 'Priority',
+                  label: t('form.priority'),
                   required: true,
                   options: [
                     { label: 'Low', value: 'Low' },
@@ -51,7 +53,7 @@ const CaseForm = () => {
                 {
                   id: 'assignee_email',
                   type: 'email' as const,
-                  label: 'Assignee Email',
+                  label: t('form.assigneeEmail'),
                   placeholder: 'assignee@company.com',
                   required: true
                 }
@@ -61,24 +63,24 @@ const CaseForm = () => {
         },
         {
           id: 'details',
-          title: 'Case Details',
+          title: t('form.caseDetails'),
           description: 'Provide detailed information about the case',
           sections: [
             {
               id: 'description-section',
-              title: 'Description',
+              title: t('form.description'),
               fields: [
                 {
                   id: 'description',
                   type: 'richtext' as const,
-                  label: 'Detailed Description',
-                  placeholder: 'Provide a detailed description of the issue or request...',
+                  label: t('form.detailedDescription'),
+                  placeholder: t('form.provideDescription'),
                   required: true
                 },
                 {
                   id: 'steps_to_reproduce',
                   type: 'textarea' as const,
-                  label: 'Steps to Reproduce',
+                  label: t('form.stepsToReproduce'),
                   placeholder: '1. Step one\n2. Step two\n3. Step three',
                   conditionalRules: [
                     {
@@ -92,8 +94,8 @@ const CaseForm = () => {
                 {
                   id: 'expected_behavior',
                   type: 'textarea' as const,
-                  label: 'Expected Behavior',
-                  placeholder: 'What should happen?',
+                  label: t('form.expectedBehavior'),
+                  placeholder: t('form.whatShouldHappen'),
                   conditionalRules: [
                     {
                       fieldId: 'priority',
@@ -107,18 +109,18 @@ const CaseForm = () => {
             },
             {
               id: 'additional-info',
-              title: 'Additional Information',
+              title: t('form.additionalInformation'),
               fields: [
                 {
                   id: 'affected_users',
                   type: 'text' as const,
-                  label: 'Number of Affected Users',
+                  label: t('form.affectedUsers'),
                   placeholder: 'e.g., 100 users, All users, etc.'
                 },
                 {
                   id: 'business_impact',
                   type: 'radio' as const,
-                  label: 'Business Impact',
+                  label: t('form.businessImpact'),
                   options: [
                     { label: 'No Impact', value: 'none' },
                     { label: 'Low Impact', value: 'low' },
@@ -151,17 +153,17 @@ const CaseForm = () => {
         },
         {
           id: 'review',
-          title: 'Review & Submit',
-          description: 'Review your information and submit the case',
+          title: t('form.reviewAndSubmit'),
+          description: t('form.reviewInformation'),
           sections: [
             {
               id: 'confirmation',
-              title: 'Confirmation',
+              title: t('form.confirmation'),
               fields: [
                 {
                   id: 'urgent_attention',
                   type: 'checkbox' as const,
-                  label: 'This case requires urgent attention',
+                  label: t('form.urgentAttention'),
                   conditionalRules: [
                     {
                       fieldId: 'priority',
@@ -174,12 +176,12 @@ const CaseForm = () => {
                 {
                   id: 'notify_team',
                   type: 'checkbox' as const,
-                  label: 'Send notifications to the entire team'
+                  label: t('form.notifyTeam')
                 },
                 {
                   id: 'additional_notes',
                   type: 'textarea' as const,
-                  label: 'Additional Notes',
+                  label: t('form.additionalNotes'),
                   placeholder: 'Any additional information or special instructions...'
                 }
               ]
@@ -194,11 +196,11 @@ const CaseForm = () => {
           'Authorization': 'Bearer token-here' // This would be dynamic
         },
         onSuccess: {
-          message: `${type} case has been created successfully!`,
+          message: t('messages.caseCreated', { type }),
           redirectUrl: '/cases'
         },
         onError: {
-          message: 'Failed to create case. Please try again.'
+          message: t('messages.caseCreationFailed')
         }
       }
     };

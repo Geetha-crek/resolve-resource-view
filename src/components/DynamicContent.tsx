@@ -1,9 +1,9 @@
-
 import React, { useState } from 'react';
 import { FileText, Plus, User, MessageSquare, Clock, CheckSquare } from "lucide-react";
 import { FileUploadDialog } from './FileUploadDialog';
 import { ChatInterface } from './ChatInterface';
 import { useNavigate } from 'react-router-dom';
+import { useTranslation } from '../hooks/useTranslation';
 
 interface DynamicContentProps {
   activeSection: string;
@@ -16,6 +16,7 @@ const DynamicContent = ({ activeSection, actions = [], teamMembers = [] }: Dynam
   const [chatDialogOpen, setChatDialogOpen] = useState(false);
   const [selectedDiscussion, setSelectedDiscussion] = useState<any>(null);
   const navigate = useNavigate();
+  const { t } = useTranslation();
 
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString('en-US', {
@@ -38,13 +39,13 @@ const DynamicContent = ({ activeSection, actions = [], teamMembers = [] }: Dynam
   const renderDocuments = () => (
     <div className="space-y-4">
       <div className="flex justify-between items-center">
-        <h3 className="text-lg font-semibold text-slate-900">Documents</h3>
+        <h3 className="text-lg font-semibold text-slate-900">{t('documents.title')}</h3>
         <button 
           onClick={() => setUploadDialogOpen(true)}
           className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors flex items-center gap-2"
         >
           <Plus className="w-4 h-4" />
-          Upload Document
+          {t('documents.uploadDocument')}
         </button>
       </div>
       {[1, 2, 3].map((doc) => (
@@ -64,13 +65,13 @@ const DynamicContent = ({ activeSection, actions = [], teamMembers = [] }: Dynam
   const renderNotes = () => (
     <div className="space-y-4">
       <div className="flex justify-between items-center">
-        <h3 className="text-lg font-semibold text-slate-900">Notes</h3>
+        <h3 className="text-lg font-semibold text-slate-900">{t('notes.title')}</h3>
         <button 
           onClick={openNoteForm}
           className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors flex items-center gap-2"
         >
           <Plus className="w-4 h-4" />
-          Add Note
+          {t('notes.addNote')}
         </button>
       </div>
       {[
@@ -138,10 +139,10 @@ const DynamicContent = ({ activeSection, actions = [], teamMembers = [] }: Dynam
     return (
       <div className="space-y-4">
         <div className="flex justify-between items-center">
-          <h3 className="text-lg font-semibold text-slate-900">Discussions</h3>
+          <h3 className="text-lg font-semibold text-slate-900">{t('discussions.title')}</h3>
           <button className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors flex items-center gap-2">
             <MessageSquare className="w-4 h-4" />
-            Start Discussion
+            {t('discussions.startDiscussion')}
           </button>
         </div>
         {discussions.map((discussion) => (
@@ -154,7 +155,7 @@ const DynamicContent = ({ activeSection, actions = [], teamMembers = [] }: Dynam
               <MessageSquare className="w-5 h-5 text-purple-600 mt-1" />
               <div className="flex-1">
                 <h4 className="font-medium text-slate-900">{discussion.title}</h4>
-                <p className="text-sm text-slate-500 mb-2">Started by {discussion.author} • {discussion.replies} replies</p>
+                <p className="text-sm text-slate-500 mb-2">{t('discussions.startedBy')} {discussion.author} • {discussion.replies} {t('discussions.replies')}</p>
                 <p className="text-slate-700">{discussion.content}</p>
               </div>
             </div>
@@ -166,7 +167,7 @@ const DynamicContent = ({ activeSection, actions = [], teamMembers = [] }: Dynam
 
   const renderTimeline = () => (
     <div className="space-y-4">
-      <h3 className="text-lg font-semibold text-slate-900">Timeline</h3>
+      <h3 className="text-lg font-semibold text-slate-900">{t('timeline.title')}</h3>
       {[
         { event: "Ticket created", time: "2024-06-10T09:00:00Z", user: "Sarah Chen" },
         { event: "Assigned to Alex Rodriguez", time: "2024-06-10T10:30:00Z", user: "Sarah Chen" },
@@ -186,7 +187,7 @@ const DynamicContent = ({ activeSection, actions = [], teamMembers = [] }: Dynam
 
   const renderActions = () => (
     <div className="space-y-4">
-      <h3 className="text-lg font-semibold text-slate-900">Current Actions</h3>
+      <h3 className="text-lg font-semibold text-slate-900">{t('actions.title')}</h3>
       {actions.map((action) => (
         <div key={action.id} className="border border-slate-200 rounded-lg p-4">
           <div className="flex items-start gap-3">
@@ -202,7 +203,7 @@ const DynamicContent = ({ activeSection, actions = [], teamMembers = [] }: Dynam
                   />
                   <span className="text-sm text-slate-600">{action.assignee.name}</span>
                 </div>
-                <span className="text-sm text-slate-500">Due: {formatDate(action.dueDate)}</span>
+                <span className="text-sm text-slate-500">{t('actions.due')}: {formatDate(action.dueDate)}</span>
                 <span className={`px-2 py-1 rounded-full text-xs font-medium ${
                   action.status === 'pending' ? 'bg-yellow-100 text-yellow-800' :
                   action.status === 'waiting' ? 'bg-orange-100 text-orange-800' :
@@ -220,7 +221,7 @@ const DynamicContent = ({ activeSection, actions = [], teamMembers = [] }: Dynam
 
   const renderTeam = () => (
     <div className="space-y-4">
-      <h3 className="text-lg font-semibold text-slate-900">Team Members</h3>
+      <h3 className="text-lg font-semibold text-slate-900">{t('team.title')}</h3>
       {teamMembers.map((member, index) => (
         <div key={index} className="border border-slate-200 rounded-lg p-4">
           <div className="flex items-center gap-3">
