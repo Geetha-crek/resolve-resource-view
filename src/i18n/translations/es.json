@@ -37,13 +37,21 @@
   "documents": {
     "title": "Documentos",
     "uploadDocument": "Subir Documento",
-    "dragAndDrop": "Arrastra y suelta archivos aquí o haz clic para navegar",
+    "dragAndDrop": "Arrastra y suelta archivos aquí",
+    "orClickToSelect": "o haz clic para seleccionar archivos",
+    "selectFiles": "Seleccionar Archivos",
+    "selectedFiles": "Archivos Seleccionados",
     "supportedFormats": "Formatos compatibles: PDF, DOC, DOCX, JPG, PNG (Máx 10MB cada uno)",
     "fileName": "Nombre del Archivo",
     "description": "Descripción",
-    "addDescription": "Agregar descripción para este archivo...",
+    "addDescription": "Agregar descripción para este archivo (opcional)",
     "removeFile": "Eliminar archivo",
-    "uploadFiles": "Subir Archivos"
+    "uploadFiles": "Subir Archivos",
+    "projectFiles": "Archivos del Proyecto",
+    "viewAndManage": "Ver y gestionar documentos y archivos adjuntos del proyecto",
+    "uploadedBy": "Subido por",
+    "size": "Tamaño",
+    "updatedAgo": "Actualizado hace {{time}}"
   },
   "notes": {
     "title": "Notas",
@@ -56,7 +64,11 @@
     "startedBy": "Iniciado por"
   },
   "timeline": {
-    "title": "Cronología"
+    "title": "Cronología",
+    "ticketCreated": "Ticket creado",
+    "assignedTo": "Asignado a {{name}}",
+    "statusChanged": "Estado cambiado a {{status}}",
+    "documentAdded": "Agregado {{document}}"
   },
   "actions": {
     "title": "Acciones Actuales",

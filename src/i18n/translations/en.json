@@ -37,13 +37,21 @@
   "documents": {
     "title": "Documents",
     "uploadDocument": "Upload Document",
-    "dragAndDrop": "Drag and drop files here or click to browse",
+    "dragAndDrop": "Drag and drop files here",
+    "orClickToSelect": "or click to select files",
+    "selectFiles": "Select Files",
+    "selectedFiles": "Selected Files",
     "supportedFormats": "Supported formats: PDF, DOC, DOCX, JPG, PNG (Max 10MB each)",
     "fileName": "File Name",
     "description": "Description",
-    "addDescription": "Add description for this file...",
+    "addDescription": "Add a description for this file (optional)",
     "removeFile": "Remove file",
-    "uploadFiles": "Upload Files"
+    "uploadFiles": "Upload Files",
+    "projectFiles": "Project Files",
+    "viewAndManage": "View and manage project documents and attachments",
+    "uploadedBy": "Uploaded by",
+    "size": "Size",
+    "updatedAgo": "Updated {{time}} ago"
   },
   "notes": {
     "title": "Notes",
@@ -56,7 +64,11 @@
     "startedBy": "Started by"
   },
   "timeline": {
-    "title": "Timeline"
+    "title": "Timeline",
+    "ticketCreated": "Ticket created",
+    "assignedTo": "Assigned to {{name}}",
+    "statusChanged": "Status changed to {{status}}",
+    "documentAdded": "Added {{document}}"
   },
   "actions": {
     "title": "Current Actions",

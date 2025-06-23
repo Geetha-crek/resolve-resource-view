@@ -1,10 +1,10 @@
-
 import React, { useState, useCallback } from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Upload, X, FileText } from 'lucide-react';
+import { useTranslation } from '../hooks/useTranslation';
 
 interface FileUploadDialogProps {
   open: boolean;
@@ -19,6 +19,7 @@ interface FileWithDescription {
 export const FileUploadDialog: React.FC<FileUploadDialogProps> = ({ open, onOpenChange }) => {
   const [files, setFiles] = useState<FileWithDescription[]>([]);
   const [dragActive, setDragActive] = useState(false);
+  const { t } = useTranslation();
 
   const handleDrag = useCallback((e: React.DragEvent) => {
     e.preventDefault();
@@ -75,9 +76,9 @@ export const FileUploadDialog: React.FC<FileUploadDialogProps> = ({ open, onOpen
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-2xl max-h-[80vh] overflow-y-auto">
         <DialogHeader>
-          <DialogTitle>Upload Documents</DialogTitle>
+          <DialogTitle>{t('documents.uploadDocument')}</DialogTitle>
           <DialogDescription>
-            Upload supporting documents for this ticket. You can drag and drop files or click to select them.
+            {t('documents.supportedFormats')}
           </DialogDescription>
         </DialogHeader>
 
@@ -96,10 +97,10 @@ export const FileUploadDialog: React.FC<FileUploadDialogProps> = ({ open, onOpen
           >
             <Upload className="w-12 h-12 text-slate-400 mx-auto mb-4" />
             <p className="text-lg font-medium text-slate-900 mb-2">
-              Drag and drop files here
+              {t('documents.dragAndDrop')}
             </p>
             <p className="text-sm text-slate-500 mb-4">
-              or click to select files
+              {t('documents.orClickToSelect')}
             </p>
             <Input
               type="file"
@@ -113,14 +114,14 @@ export const FileUploadDialog: React.FC<FileUploadDialogProps> = ({ open, onOpen
               variant="outline"
               onClick={() => document.getElementById('file-upload')?.click()}
             >
-              Select Files
+              {t('documents.selectFiles')}
             </Button>
           </div>
 
           {/* File List */}
           {files.length > 0 && (
             <div className="space-y-3">
-              <h4 className="font-medium text-slate-900">Selected Files</h4>
+              <h4 className="font-medium text-slate-900">{t('documents.selectedFiles')}</h4>
               {files.map((item, index) => (
                 <div key={index} className="border border-slate-200 rounded-lg p-4">
                   <div className="flex items-start justify-between mb-3">
@@ -143,7 +144,7 @@ export const FileUploadDialog: React.FC<FileUploadDialogProps> = ({ open, onOpen
                     </Button>
                   </div>
                   <Textarea
-                    placeholder="Add a description for this file (optional)"
+                    placeholder={t('documents.addDescription')}
                     value={item.description}
                     onChange={(e) => updateDescription(index, e.target.value)}
                     className="resize-none"
@@ -161,14 +162,14 @@ export const FileUploadDialog: React.FC<FileUploadDialogProps> = ({ open, onOpen
               variant="outline"
               onClick={() => onOpenChange(false)}
             >
-              Cancel
+              {t('common.cancel')}
             </Button>
             <Button
               type="button"
               onClick={handleUpload}
               disabled={files.length === 0}
             >
-              Upload {files.length} {files.length === 1 ? 'File' : 'Files'}
+              {t('documents.uploadFiles')} {files.length} {files.length === 1 ? 'File' : 'Files'}
             </Button>
           </div>
         </div>

@@ -1,7 +1,10 @@
 
 import { FileText, Download, Eye, Calendar } from "lucide-react";
+import { useTranslation } from "../hooks/useTranslation";
 
 const Documents = () => {
+  const { t } = useTranslation();
+  
   const documents = [
     {
       id: 1,
@@ -58,16 +61,16 @@ const Documents = () => {
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50">
       <div className="container mx-auto px-4 py-8 max-w-7xl">
         <div className="mb-6">
-          <h1 className="text-3xl font-bold text-slate-900 mb-2">Documents</h1>
-          <p className="text-slate-600">View and manage project documents and attachments</p>
+          <h1 className="text-3xl font-bold text-slate-900 mb-2">{t('documents.title')}</h1>
+          <p className="text-slate-600">{t('documents.viewAndManage')}</p>
         </div>
 
         <div className="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
           <div className="p-6 border-b border-slate-200">
             <div className="flex items-center justify-between">
-              <h2 className="text-lg font-semibold text-slate-900">Project Files</h2>
+              <h2 className="text-lg font-semibold text-slate-900">{t('documents.projectFiles')}</h2>
               <button className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors">
-                Upload Document
+                {t('documents.uploadDocument')}
               </button>
             </div>
           </div>
@@ -85,7 +88,7 @@ const Documents = () => {
                       <div className="flex items-center gap-4 mt-1 text-sm text-slate-500">
                         <span>{doc.size}</span>
                         <span>•</span>
-                        <span>Uploaded by {doc.uploadedBy}</span>
+                        <span>{t('documents.uploadedBy')} {doc.uploadedBy}</span>
                         <span>•</span>
                         <span>{doc.uploadedDate}</span>
                       </div>
