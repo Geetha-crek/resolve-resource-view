@@ -1,4 +1,3 @@
-
 import React, { useState, useCallback, useMemo } from 'react';
 import {
   ReactFlow,
@@ -15,17 +14,19 @@ import {
 } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { QuestionNode } from './nodes/QuestionNode';
 import { DocumentNode } from './nodes/DocumentNode';
+import { StaticTextNode } from './nodes/StaticTextNode';
+import { NodeSidebar } from './NodeSidebar';
 import { NodePropertiesPanel } from './NodePropertiesPanel';
 import { FlowPreview } from './FlowPreview';
-import { SolutionFlow, QuestionNodeData, DocumentNodeData } from '@/types/flowBuilder';
-import { Plus, Play, Save, Upload } from 'lucide-react';
+import { SolutionFlow, QuestionNodeData, DocumentNodeData, StaticTextNodeData } from '@/types/flowBuilder';
+import { Play, Save, Upload } from 'lucide-react';
 
 const nodeTypes: NodeTypes = {
   question: QuestionNode,
   document: DocumentNode,
+  staticText: StaticTextNode,
 };
 
 const initialNodes: Node[] = [];
@@ -47,53 +48,58 @@ export const FlowBuilder: React.FC = () => {
     setSelectedNode(node);
   }, []);
 
-  const addQuestionNode = useCallback(() => {
-    const id = `question-${Date.now()}`;
-    const questionData: QuestionNodeData = {
-      id,
-      label: 'New Question',
-      fieldType: 'text',
-      variableName: `var_${Date.now()}`,
-      helpText: '',
-      validation: { required: false }
-    };
+  const addNode = useCallback((type: 'question' | 'document' | 'staticText') => {
+    const id = `${type}-${Date.now()}`;
+    let nodeData: QuestionNodeData | DocumentNodeData | StaticTextNodeData;
+    
+    if (type === 'question') {
+      nodeData = {
+        id,
+        label: 'New Question',
+        fieldType: 'text',
+        variableName: `var_${Date.now()}`,
+        helpText: '',
+        validation: { required: false }
+      } as QuestionNodeData;
+    } else if (type === 'document') {
+      nodeData = {
+        id,
+        label: 'Document Draft',
+        template: '<p>Draft document template...</p>',
+        variables: []
+      } as DocumentNodeData;
+    } else {
+      nodeData = {
+        id,
+        label: 'Static Text',
+        content: 'Enter your static text here...',
+        textAlign: 'left',
+        fontSize: 'medium'
+      } as StaticTextNodeData;
+    }
     
     const newNode: Node = {
       id,
-      type: 'question',
+      type,
       position: { x: Math.random() * 400, y: Math.random() * 400 },
-      data: questionData as Record<string, unknown>,
-      className: 'group' // Add group class for hover effects
+      data: nodeData as Record<string, unknown>,
+      className: 'group'
     };
     setNodes((nds) => [...nds, newNode]);
   }, [setNodes]);
 
-  const addDocumentNode = useCallback(() => {
-    const id = `document-${Date.now()}`;
-    const documentData: DocumentNodeData = {
-      id,
-      label: 'Document Draft',
-      template: '<p>Draft document template...</p>',
-      variables: []
-    };
-    
-    const newNode: Node = {
-      id,
-      type: 'document',
-      position: { x: Math.random() * 400, y: Math.random() * 400 },
-      data: documentData as Record<string, unknown>,
-      className: 'group' // Add group class for hover effects
-    };
-    setNodes((nds) => [...nds, newNode]);
-  }, [setNodes]);
-
-  const updateNodeData = useCallback((nodeId: string, data: any) => {
+  const updateNodeData = useCallback((nodeId: string, newData: any) => {
     setNodes((nds) =>
       nds.map((node) =>
-        node.id === nodeId ? { ...node, data: { ...node.data, ...data } } : node
+        node.id === nodeId ? { ...node, data: { ...node.data, ...newData } } : node
       )
     );
-  }, [setNodes]);
+    
+    // Update selected node if it's the one being updated
+    if (selectedNode && selectedNode.id === nodeId) {
+      setSelectedNode(prev => prev ? { ...prev, data: { ...prev.data, ...newData } } : null);
+    }
+  }, [setNodes, selectedNode]);
 
   const saveFlow = useCallback(() => {
     const flow: SolutionFlow = {
@@ -101,9 +107,9 @@ export const FlowBuilder: React.FC = () => {
       name: flowName,
       nodes: nodes.map(node => ({
         id: node.id,
-        type: node.type as 'question' | 'document',
+        type: node.type as 'question' | 'document' | 'staticText',
         position: node.position,
-        data: node.data as QuestionNodeData | DocumentNodeData
+        data: node.data as QuestionNodeData | DocumentNodeData | StaticTextNodeData
       })),
       edges: edges.map(edge => ({
         id: edge.id,
@@ -153,9 +159,9 @@ export const FlowBuilder: React.FC = () => {
       <FlowPreview
         nodes={nodes.map(node => ({
           id: node.id,
-          type: node.type as 'question' | 'document',
+          type: node.type as 'question' | 'document' | 'staticText',
           position: node.position,
-          data: node.data as QuestionNodeData | DocumentNodeData
+          data: node.data as QuestionNodeData | DocumentNodeData | StaticTextNodeData
         }))}
         edges={edges}
         onBack={() => setIsPreviewMode(false)}
@@ -165,6 +171,9 @@ export const FlowBuilder: React.FC = () => {
 
   return (
     <div className="h-screen flex bg-slate-50">
+      {/* Left Sidebar */}
+      <NodeSidebar onAddNode={addNode} />
+
       {/* Main Canvas */}
       <div className="flex-1 relative">
         <div className="absolute top-4 left-4 z-10 flex gap-2">
@@ -175,14 +184,6 @@ export const FlowBuilder: React.FC = () => {
             className="px-3 py-2 border rounded-md bg-white"
             placeholder="Flow name"
           />
-          <Button onClick={addQuestionNode} size="sm">
-            <Plus className="w-4 h-4 mr-1" />
-            Question
-          </Button>
-          <Button onClick={addDocumentNode} size="sm" variant="secondary">
-            <Plus className="w-4 h-4 mr-1" />
-            Document
-          </Button>
           <Button onClick={() => setIsPreviewMode(true)} size="sm" variant="outline">
             <Play className="w-4 h-4 mr-1" />
             Preview

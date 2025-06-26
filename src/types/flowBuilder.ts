@@ -1,4 +1,3 @@
-
 export type FieldType = 
   | 'text'
   | 'textarea'
@@ -45,11 +44,20 @@ export interface DocumentNodeData {
   [key: string]: any; // Index signature for React Flow compatibility
 }
 
+export interface StaticTextNodeData {
+  id: string;
+  label: string;
+  content: string;
+  textAlign?: 'left' | 'center' | 'right';
+  fontSize?: 'small' | 'medium' | 'large';
+  [key: string]: any; // Index signature for React Flow compatibility
+}
+
 export interface FlowNode {
   id: string;
-  type: 'question' | 'document';
+  type: 'question' | 'document' | 'staticText';
   position: { x: number; y: number };
-  data: QuestionNodeData | DocumentNodeData;
+  data: QuestionNodeData | DocumentNodeData | StaticTextNodeData;
 }
 
 export interface FlowEdge {

@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Node } from '@xyflow/react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -9,7 +8,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Separator } from '@/components/ui/separator';
-import { QuestionNodeData, DocumentNodeData, FieldType, FieldOption } from '@/types/flowBuilder';
+import { QuestionNodeData, DocumentNodeData, StaticTextNodeData, FieldType, FieldOption } from '@/types/flowBuilder';
 import { X, Plus, Trash2 } from 'lucide-react';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
@@ -25,12 +24,12 @@ export const NodePropertiesPanel: React.FC<NodePropertiesPanelProps> = ({
   onUpdateNode,
   onClose
 }) => {
-  const [localData, setLocalData] = useState<QuestionNodeData | DocumentNodeData>(
-    node.data as QuestionNodeData | DocumentNodeData
+  const [localData, setLocalData] = useState<QuestionNodeData | DocumentNodeData | StaticTextNodeData>(
+    node.data as QuestionNodeData | DocumentNodeData | StaticTextNodeData
   );
 
   useEffect(() => {
-    setLocalData(node.data as QuestionNodeData | DocumentNodeData);
+    setLocalData(node.data as QuestionNodeData | DocumentNodeData | StaticTextNodeData);
   }, [node]);
 
   const handleSave = () => {
@@ -38,7 +37,10 @@ export const NodePropertiesPanel: React.FC<NodePropertiesPanelProps> = ({
   };
 
   const handleFieldChange = (field: string, value: any) => {
-    setLocalData({ ...localData, [field]: value });
+    const newData = { ...localData, [field]: value };
+    setLocalData(newData);
+    // Auto-save changes immediately
+    onUpdateNode(node.id, { [field]: value });
   };
 
   const handleValidationChange = (field: string, value: any) => {
@@ -82,12 +84,19 @@ export const NodePropertiesPanel: React.FC<NodePropertiesPanelProps> = ({
     'date', 'datetime', 'currency', 'url', 'file'
   ];
 
+  const getNodeTitle = () => {
+    switch (node.type) {
+      case 'question': return 'Question Properties';
+      case 'document': return 'Document Properties';
+      case 'staticText': return 'Static Text Properties';
+      default: return 'Node Properties';
+    }
+  };
+
   return (
     <div className="h-full flex flex-col">
       <CardHeader className="flex flex-row items-center justify-between">
-        <CardTitle className="text-lg">
-          {node.type === 'question' ? 'Question Properties' : 'Document Properties'}
-        </CardTitle>
+        <CardTitle className="text-lg">{getNodeTitle()}</CardTitle>
         <Button variant="ghost" size="sm" onClick={onClose}>
           <X className="w-4 h-4" />
         </Button>
@@ -104,6 +113,55 @@ export const NodePropertiesPanel: React.FC<NodePropertiesPanelProps> = ({
             placeholder="Enter label"
           />
         </div>
+
+        {node.type === 'staticText' && (
+          <>
+            <div className="space-y-2">
+              <Label htmlFor="content">Content</Label>
+              <Textarea
+                id="content"
+                value={(localData as StaticTextNodeData).content || ''}
+                onChange={(e) => handleFieldChange('content', e.target.value)}
+                placeholder="Enter static text content"
+                rows={4}
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="textAlign">Text Alignment</Label>
+              <Select
+                value={(localData as StaticTextNodeData).textAlign || 'left'}
+                onValueChange={(value) => handleFieldChange('textAlign', value)}
+              >
+                <SelectTrigger>
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="left">Left</SelectItem>
+                  <SelectItem value="center">Center</SelectItem>
+                  <SelectItem value="right">Right</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="fontSize">Font Size</Label>
+              <Select
+                value={(localData as StaticTextNodeData).fontSize || 'medium'}
+                onValueChange={(value) => handleFieldChange('fontSize', value)}
+              >
+                <SelectTrigger>
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="small">Small</SelectItem>
+                  <SelectItem value="medium">Medium</SelectItem>
+                  <SelectItem value="large">Large</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+          </>
+        )}
 
         {node.type === 'question' && (
           <>
@@ -255,28 +313,30 @@ export const NodePropertiesPanel: React.FC<NodePropertiesPanelProps> = ({
         )}
 
         {node.type === 'document' && (
-          <div className="space-y-4">
-            <div className="space-y-2">
-              <Label>Document Template</Label>
-              <ReactQuill
-                value={(localData as DocumentNodeData).template || ''}
-                onChange={(value) => handleFieldChange('template', value)}
-                modules={{
-                  toolbar: [
-                    [{ 'header': [1, 2, 3, false] }],
-                    ['bold', 'italic', 'underline'],
-                    ['link'],
-                    [{ 'list': 'ordered'}, { 'list': 'bullet' }],
-                    ['clean']
-                  ],
-                }}
-                style={{ minHeight: '200px' }}
-              />
+          <>
+            <div className="space-y-4">
+              <div className="space-y-2">
+                <Label>Document Template</Label>
+                <ReactQuill
+                  value={(localData as DocumentNodeData).template || ''}
+                  onChange={(value) => handleFieldChange('template', value)}
+                  modules={{
+                    toolbar: [
+                      [{ 'header': [1, 2, 3, false] }],
+                      ['bold', 'italic', 'underline'],
+                      ['link'],
+                      [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+                      ['clean']
+                    ],
+                  }}
+                  style={{ minHeight: '200px' }}
+                />
+              </div>
+              <div className="text-sm text-slate-600">
+                Use variables like {'{{variable_name}}'} to insert dynamic content from previous questions.
+              </div>
             </div>
-            <div className="text-sm text-slate-600">
-              Use variables like {'{{variable_name}}'} to insert dynamic content from previous questions.
-            </div>
-          </div>
+          </>
         )}
       </CardContent>
 
