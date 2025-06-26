@@ -22,7 +22,7 @@ import { NodeSidebar } from './NodeSidebar';
 import { NodePropertiesPanel } from './NodePropertiesPanel';
 import { EdgePropertiesPanel } from './EdgePropertiesPanel';
 import { FlowPreview } from './FlowPreview';
-import { SolutionFlow, QuestionNodeData, DocumentNodeData, StaticTextNodeData, ConditionalNodeData } from '@/types/flowBuilder';
+import { SolutionFlow, QuestionNodeData, DocumentNodeData, StaticTextNodeData, ConditionalNodeData, EdgeCondition } from '@/types/flowBuilder';
 import { Play, Save, Upload } from 'lucide-react';
 
 const nodeTypes: NodeTypes = {
@@ -34,6 +34,14 @@ const nodeTypes: NodeTypes = {
 
 const initialNodes: Node[] = [];
 const initialEdges: Edge[] = [];
+
+const defaultCondition: EdgeCondition = {
+  enabled: false,
+  field: '',
+  operator: 'equals',
+  value: '',
+  label: ''
+};
 
 export const FlowBuilder: React.FC = () => {
   const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
@@ -177,13 +185,7 @@ export const FlowBuilder: React.FC = () => {
         id: edge.id,
         source: edge.source,
         target: edge.target,
-        condition: edge.data?.condition || {
-          enabled: false,
-          field: '',
-          operator: 'equals',
-          value: '',
-          label: ''
-        },
+        condition: edge.data?.condition || defaultCondition,
         label: edge.label as string
       })),
       createdAt: new Date().toISOString(),

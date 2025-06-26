@@ -17,6 +17,14 @@ interface EdgePropertiesPanelProps {
   onClose: () => void;
 }
 
+const defaultCondition: EdgeCondition = {
+  enabled: false,
+  field: '',
+  operator: 'equals',
+  value: '',
+  label: ''
+};
+
 export const EdgePropertiesPanel: React.FC<EdgePropertiesPanelProps> = ({
   edge,
   availableVariables,
@@ -25,25 +33,13 @@ export const EdgePropertiesPanel: React.FC<EdgePropertiesPanelProps> = ({
 }) => {
   const [localData, setLocalData] = useState<Partial<FlowEdge>>({
     label: (edge.label as string) || '',
-    condition: edge.data?.condition || {
-      enabled: false,
-      field: '',
-      operator: 'equals',
-      value: '',
-      label: ''
-    }
+    condition: edge.data?.condition || defaultCondition
   });
 
   useEffect(() => {
     setLocalData({
       label: (edge.label as string) || '',
-      condition: edge.data?.condition || {
-        enabled: false,
-        field: '',
-        operator: 'equals',
-        value: '',
-        label: ''
-      }
+      condition: edge.data?.condition || defaultCondition
     });
   }, [edge]);
 
