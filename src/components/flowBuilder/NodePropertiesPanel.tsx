@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { Node } from '@xyflow/react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -8,7 +9,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Separator } from '@/components/ui/separator';
-import { QuestionNodeData, DocumentNodeData, StaticTextNodeData, FieldType, FieldOption } from '@/types/flowBuilder';
+import { QuestionNodeData, DocumentNodeData, StaticTextNodeData, ConditionalNodeData, FieldType, FieldOption } from '@/types/flowBuilder';
 import { X, Plus, Trash2 } from 'lucide-react';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
@@ -24,17 +25,13 @@ export const NodePropertiesPanel: React.FC<NodePropertiesPanelProps> = ({
   onUpdateNode,
   onClose
 }) => {
-  const [localData, setLocalData] = useState<QuestionNodeData | DocumentNodeData | StaticTextNodeData>(
-    node.data as QuestionNodeData | DocumentNodeData | StaticTextNodeData
+  const [localData, setLocalData] = useState<QuestionNodeData | DocumentNodeData | StaticTextNodeData | ConditionalNodeData>(
+    node.data as QuestionNodeData | DocumentNodeData | StaticTextNodeData | ConditionalNodeData
   );
 
   useEffect(() => {
-    setLocalData(node.data as QuestionNodeData | DocumentNodeData | StaticTextNodeData);
+    setLocalData(node.data as QuestionNodeData | DocumentNodeData | StaticTextNodeData | ConditionalNodeData);
   }, [node]);
-
-  const handleSave = () => {
-    onUpdateNode(node.id, localData);
-  };
 
   const handleFieldChange = (field: string, value: any) => {
     const newData = { ...localData, [field]: value };
@@ -46,10 +43,12 @@ export const NodePropertiesPanel: React.FC<NodePropertiesPanelProps> = ({
   const handleValidationChange = (field: string, value: any) => {
     if (node.type === 'question') {
       const questionData = localData as QuestionNodeData;
+      const newValidation = { ...questionData.validation, [field]: value };
       setLocalData({
         ...localData,
-        validation: { ...questionData.validation, [field]: value }
+        validation: newValidation
       });
+      onUpdateNode(node.id, { validation: newValidation });
     }
   };
 
@@ -89,6 +88,7 @@ export const NodePropertiesPanel: React.FC<NodePropertiesPanelProps> = ({
       case 'question': return 'Question Properties';
       case 'document': return 'Document Properties';
       case 'staticText': return 'Static Text Properties';
+      case 'conditional': return 'Conditional Properties';
       default: return 'Node Properties';
     }
   };
@@ -113,6 +113,19 @@ export const NodePropertiesPanel: React.FC<NodePropertiesPanelProps> = ({
             placeholder="Enter label"
           />
         </div>
+
+        {node.type === 'conditional' && (
+          <div className="space-y-2">
+            <Label htmlFor="description">Description</Label>
+            <Textarea
+              id="description"
+              value={(localData as ConditionalNodeData).description || ''}
+              onChange={(e) => handleFieldChange('description', e.target.value)}
+              placeholder="Describe the branching logic"
+              rows={3}
+            />
+          </div>
+        )}
 
         {node.type === 'staticText' && (
           <>
@@ -339,12 +352,6 @@ export const NodePropertiesPanel: React.FC<NodePropertiesPanelProps> = ({
           </>
         )}
       </CardContent>
-
-      <div className="p-4 border-t">
-        <Button onClick={handleSave} className="w-full">
-          Save Changes
-        </Button>
-      </div>
     </div>
   );
 };

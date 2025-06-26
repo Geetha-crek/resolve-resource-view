@@ -54,11 +54,18 @@ export interface StaticTextNodeData {
   [key: string]: any; // Index signature for React Flow compatibility
 }
 
+export interface ConditionalNodeData {
+  id: string;
+  label: string;
+  description?: string;
+  [key: string]: any; // Index signature for React Flow compatibility
+}
+
 export interface FlowNode {
   id: string;
-  type: 'question' | 'document' | 'staticText';
+  type: 'question' | 'document' | 'staticText' | 'conditional';
   position: { x: number; y: number };
-  data: QuestionNodeData | DocumentNodeData | StaticTextNodeData;
+  data: QuestionNodeData | DocumentNodeData | StaticTextNodeData | ConditionalNodeData;
 }
 
 export interface EdgeCondition {

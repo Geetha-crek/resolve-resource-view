@@ -1,3 +1,4 @@
+
 import React, { useState, useCallback, useMemo } from 'react';
 import {
   ReactFlow,
@@ -17,17 +18,19 @@ import { Button } from '@/components/ui/button';
 import { QuestionNode } from './nodes/QuestionNode';
 import { DocumentNode } from './nodes/DocumentNode';
 import { StaticTextNode } from './nodes/StaticTextNode';
+import { ConditionalNode } from './nodes/ConditionalNode';
 import { NodeSidebar } from './NodeSidebar';
 import { NodePropertiesPanel } from './NodePropertiesPanel';
 import { EdgePropertiesPanel } from './EdgePropertiesPanel';
 import { FlowPreview } from './FlowPreview';
-import { SolutionFlow, QuestionNodeData, DocumentNodeData, StaticTextNodeData } from '@/types/flowBuilder';
+import { SolutionFlow, QuestionNodeData, DocumentNodeData, StaticTextNodeData, ConditionalNodeData } from '@/types/flowBuilder';
 import { Play, Save, Upload } from 'lucide-react';
 
 const nodeTypes: NodeTypes = {
   question: QuestionNode,
   document: DocumentNode,
   staticText: StaticTextNode,
+  conditional: ConditionalNode,
 };
 
 const initialNodes: Node[] = [];
@@ -39,12 +42,25 @@ export const FlowBuilder: React.FC = () => {
   const [selectedNode, setSelectedNode] = useState<Node | null>(null);
   const [selectedEdge, setSelectedEdge] = useState<Edge | null>(null);
   const [isPreviewMode, setIsPreviewMode] = useState(false);
-  const [flowName, setFlowName] = useState('Untitled Flow');
+  const [flowName, setFlowName] = useState('Untitled Solution Path');
 
-  const onConnect = useCallback(
-    (params: Connection) => setEdges((eds) => addEdge(params, eds)),
-    [setEdges]
-  );
+  const onConnect = useCallback((params: Connection) => {
+    // Check if source node allows multiple connections
+    const sourceNode = nodes.find(node => node.id === params.source);
+    const sourceNodeType = sourceNode?.type;
+    
+    // Only conditional nodes can have multiple outgoing connections
+    if (sourceNodeType !== 'conditional') {
+      // Check if source already has an outgoing connection
+      const existingConnection = edges.find(edge => edge.source === params.source);
+      if (existingConnection) {
+        // Remove existing connection if it's not from a conditional node
+        setEdges((eds) => eds.filter(edge => edge.id !== existingConnection.id));
+      }
+    }
+    
+    setEdges((eds) => addEdge(params, eds));
+  }, [setEdges, nodes, edges]);
 
   const onNodeClick = useCallback((event: React.MouseEvent, node: Node) => {
     setSelectedNode(node);
@@ -61,9 +77,9 @@ export const FlowBuilder: React.FC = () => {
     setSelectedEdge(null);
   }, []);
 
-  const addNode = useCallback((type: 'question' | 'document' | 'staticText') => {
+  const addNode = useCallback((type: 'question' | 'document' | 'staticText' | 'conditional') => {
     const id = `${type}-${Date.now()}`;
-    let nodeData: QuestionNodeData | DocumentNodeData | StaticTextNodeData;
+    let nodeData: QuestionNodeData | DocumentNodeData | StaticTextNodeData | ConditionalNodeData;
     
     if (type === 'question') {
       nodeData = {
@@ -81,6 +97,12 @@ export const FlowBuilder: React.FC = () => {
         template: '<p>Draft document template...</p>',
         variables: []
       } as DocumentNodeData;
+    } else if (type === 'conditional') {
+      nodeData = {
+        id,
+        label: 'Conditional Branch',
+        description: 'Branching logic based on conditions'
+      } as ConditionalNodeData;
     } else {
       nodeData = {
         id,
@@ -120,7 +142,7 @@ export const FlowBuilder: React.FC = () => {
         edge.id === edgeId ? { 
           ...edge, 
           data: { ...edge.data, ...newData },
-          label: newData.label || edge.label
+          label: newData.condition?.enabled && newData.condition?.label ? newData.condition.label : (newData.label || edge.label)
         } : edge
       )
     );
@@ -130,7 +152,7 @@ export const FlowBuilder: React.FC = () => {
       setSelectedEdge(prev => prev ? { 
         ...prev, 
         data: { ...prev.data, ...newData },
-        label: newData.label || prev.label
+        label: newData.condition?.enabled && newData.condition?.label ? newData.condition.label : (newData.label || prev.label)
       } : null);
     }
   }, [setEdges, selectedEdge]);
@@ -148,15 +170,22 @@ export const FlowBuilder: React.FC = () => {
       name: flowName,
       nodes: nodes.map(node => ({
         id: node.id,
-        type: node.type as 'question' | 'document' | 'staticText',
+        type: node.type as 'question' | 'document' | 'staticText' | 'conditional',
         position: node.position,
-        data: node.data as QuestionNodeData | DocumentNodeData | StaticTextNodeData
+        data: node.data as QuestionNodeData | DocumentNodeData | StaticTextNodeData | ConditionalNodeData
       })),
       edges: edges.map(edge => ({
         id: edge.id,
         source: edge.source,
         target: edge.target,
-        condition: edge.data?.condition
+        condition: edge.data?.condition || {
+          enabled: false,
+          field: '',
+          operator: 'equals',
+          value: '',
+          label: ''
+        },
+        label: edge.label as string
       })),
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString()
@@ -201,9 +230,9 @@ export const FlowBuilder: React.FC = () => {
       <FlowPreview
         nodes={nodes.map(node => ({
           id: node.id,
-          type: node.type as 'question' | 'document' | 'staticText',
+          type: node.type as 'question' | 'document' | 'staticText' | 'conditional',
           position: node.position,
-          data: node.data as QuestionNodeData | DocumentNodeData | StaticTextNodeData
+          data: node.data as QuestionNodeData | DocumentNodeData | StaticTextNodeData | ConditionalNodeData
         }))}
         edges={edges}
         onBack={() => setIsPreviewMode(false)}
@@ -224,7 +253,7 @@ export const FlowBuilder: React.FC = () => {
             value={flowName}
             onChange={(e) => setFlowName(e.target.value)}
             className="px-3 py-2 border rounded-md bg-white"
-            placeholder="Flow name"
+            placeholder="Solution path name"
           />
           <Button onClick={() => setIsPreviewMode(true)} size="sm" variant="outline">
             <Play className="w-4 h-4 mr-1" />

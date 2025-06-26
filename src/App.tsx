@@ -18,7 +18,8 @@ import ExternalLinks from "./pages/ExternalLinks";
 import Dashboard from "./pages/Dashboard";
 import NotFound from "./pages/NotFound";
 import CaseForm from "./pages/CaseForm";
-import FlowBuilderPage from "./pages/FlowBuilder";
+import SolutionPathsPage from "./pages/SolutionPaths";
+import WorkflowBuilderPage from "./pages/WorkflowBuilder";
 
 const queryClient = new QueryClient();
 
@@ -43,7 +44,8 @@ const App = () => (
             <Route path="/related-tickets" element={<RelatedTickets />} />
             <Route path="/external-links" element={<ExternalLinks />}  />
             <Route path="/dashboard" element={<Dashboard />} />
-            <Route path="/flow-builder" element={<FlowBuilderPage />} />
+            <Route path="/solution-paths" element={<SolutionPathsPage />} />
+            <Route path="/workflow-builder" element={<WorkflowBuilderPage />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>

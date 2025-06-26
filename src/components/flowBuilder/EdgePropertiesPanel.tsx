@@ -25,7 +25,7 @@ export const EdgePropertiesPanel: React.FC<EdgePropertiesPanelProps> = ({
   onClose
 }) => {
   const [localData, setLocalData] = useState<Partial<FlowEdge>>({
-    label: edge.label || '',
+    label: (edge.label as string) || '',
     condition: edge.data?.condition || {
       enabled: false,
       field: '',
@@ -37,7 +37,7 @@ export const EdgePropertiesPanel: React.FC<EdgePropertiesPanelProps> = ({
 
   useEffect(() => {
     setLocalData({
-      label: edge.label || '',
+      label: (edge.label as string) || '',
       condition: edge.data?.condition || {
         enabled: false,
         field: '',
