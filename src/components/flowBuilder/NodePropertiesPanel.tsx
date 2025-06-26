@@ -25,10 +25,12 @@ export const NodePropertiesPanel: React.FC<NodePropertiesPanelProps> = ({
   onUpdateNode,
   onClose
 }) => {
-  const [localData, setLocalData] = useState(node.data);
+  const [localData, setLocalData] = useState<QuestionNodeData | DocumentNodeData>(
+    node.data as QuestionNodeData | DocumentNodeData
+  );
 
   useEffect(() => {
-    setLocalData(node.data);
+    setLocalData(node.data as QuestionNodeData | DocumentNodeData);
   }, [node]);
 
   const handleSave = () => {
@@ -40,26 +42,30 @@ export const NodePropertiesPanel: React.FC<NodePropertiesPanelProps> = ({
   };
 
   const handleValidationChange = (field: string, value: any) => {
+    const questionData = localData as QuestionNodeData;
     setLocalData({
       ...localData,
-      validation: { ...localData.validation, [field]: value }
+      validation: { ...questionData.validation, [field]: value }
     });
   };
 
   const addOption = () => {
-    const options = localData.options || [];
+    const questionData = localData as QuestionNodeData;
+    const options = questionData.options || [];
     const newOption: FieldOption = { label: 'New Option', value: `option_${Date.now()}` };
     handleFieldChange('options', [...options, newOption]);
   };
 
   const updateOption = (index: number, field: string, value: string) => {
-    const options = [...(localData.options || [])];
+    const questionData = localData as QuestionNodeData;
+    const options = [...(questionData.options || [])];
     options[index] = { ...options[index], [field]: value };
     handleFieldChange('options', options);
   };
 
   const removeOption = (index: number) => {
-    const options = localData.options || [];
+    const questionData = localData as QuestionNodeData;
+    const options = questionData.options || [];
     handleFieldChange('options', options.filter((_, i) => i !== index));
   };
 
@@ -153,7 +159,7 @@ export const NodePropertiesPanel: React.FC<NodePropertiesPanelProps> = ({
                     Add
                   </Button>
                 </div>
-                {(localData.options || []).map((option: FieldOption, index: number) => (
+                {((localData as QuestionNodeData).options || []).map((option: FieldOption, index: number) => (
                   <div key={index} className="flex gap-2">
                     <Input
                       placeholder="Label"
@@ -186,7 +192,7 @@ export const NodePropertiesPanel: React.FC<NodePropertiesPanelProps> = ({
               <div className="flex items-center space-x-2">
                 <Checkbox
                   id="required"
-                  checked={localData.validation?.required || false}
+                  checked={(localData as QuestionNodeData).validation?.required || false}
                   onCheckedChange={(checked) => handleValidationChange('required', checked)}
                 />
                 <Label htmlFor="required">Required field</Label>
@@ -196,7 +202,7 @@ export const NodePropertiesPanel: React.FC<NodePropertiesPanelProps> = ({
                 <Label htmlFor="regex">Regex Pattern</Label>
                 <Input
                   id="regex"
-                  value={localData.validation?.regex || ''}
+                  value={(localData as QuestionNodeData).validation?.regex || ''}
                   onChange={(e) => handleValidationChange('regex', e.target.value)}
                   placeholder="^[a-zA-Z0-9]+$"
                 />
@@ -210,7 +216,7 @@ export const NodePropertiesPanel: React.FC<NodePropertiesPanelProps> = ({
                       <Input
                         id="min"
                         type="number"
-                        value={localData.validation?.min || ''}
+                        value={(localData as QuestionNodeData).validation?.min || ''}
                         onChange={(e) => handleValidationChange('min', parseInt(e.target.value))}
                       />
                     </div>
@@ -219,7 +225,7 @@ export const NodePropertiesPanel: React.FC<NodePropertiesPanelProps> = ({
                       <Input
                         id="max"
                         type="number"
-                        value={localData.validation?.max || ''}
+                        value={(localData as QuestionNodeData).validation?.max || ''}
                         onChange={(e) => handleValidationChange('max', parseInt(e.target.value))}
                       />
                     </div>
@@ -231,7 +237,7 @@ export const NodePropertiesPanel: React.FC<NodePropertiesPanelProps> = ({
                 <Label htmlFor="validationMessage">Validation Message</Label>
                 <Input
                   id="validationMessage"
-                  value={localData.validation?.message || ''}
+                  value={(localData as QuestionNodeData).validation?.message || ''}
                   onChange={(e) => handleValidationChange('message', e.target.value)}
                   placeholder="Custom validation error message"
                 />

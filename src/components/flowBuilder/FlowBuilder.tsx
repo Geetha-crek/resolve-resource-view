@@ -20,12 +20,12 @@ import { QuestionNode } from './nodes/QuestionNode';
 import { DocumentNode } from './nodes/DocumentNode';
 import { NodePropertiesPanel } from './NodePropertiesPanel';
 import { FlowPreview } from './FlowPreview';
-import { SolutionFlow, FlowNode as FlowNodeType } from '@/types/flowBuilder';
+import { SolutionFlow, QuestionNodeData, DocumentNodeData } from '@/types/flowBuilder';
 import { Plus, Play, Save, Upload } from 'lucide-react';
 
 const nodeTypes: NodeTypes = {
-  question: QuestionNode,
-  document: DocumentNode,
+  question: QuestionNode as any,
+  document: DocumentNode as any,
 };
 
 const initialNodes: Node[] = [];
@@ -60,7 +60,7 @@ export const FlowBuilder: React.FC = () => {
         variableName: `var_${Date.now()}`,
         helpText: '',
         validation: { required: false }
-      }
+      } as QuestionNodeData
     };
     setNodes((nds) => [...nds, newNode]);
   }, [setNodes]);
@@ -76,7 +76,7 @@ export const FlowBuilder: React.FC = () => {
         label: 'Document Draft',
         template: '<p>Draft document template...</p>',
         variables: []
-      }
+      } as DocumentNodeData
     };
     setNodes((nds) => [...nds, newNode]);
   }, [setNodes]);
@@ -93,7 +93,12 @@ export const FlowBuilder: React.FC = () => {
     const flow: SolutionFlow = {
       id: `flow-${Date.now()}`,
       name: flowName,
-      nodes: nodes as FlowNodeType[],
+      nodes: nodes.map(node => ({
+        id: node.id,
+        type: node.type as 'question' | 'document',
+        position: node.position,
+        data: node.data as QuestionNodeData | DocumentNodeData
+      })),
       edges: edges.map(edge => ({
         id: edge.id,
         source: edge.source,
@@ -120,7 +125,12 @@ export const FlowBuilder: React.FC = () => {
         try {
           const flow: SolutionFlow = JSON.parse(e.target?.result as string);
           setFlowName(flow.name);
-          setNodes(flow.nodes as Node[]);
+          setNodes(flow.nodes.map(node => ({
+            id: node.id,
+            type: node.type,
+            position: node.position,
+            data: node.data
+          })));
           setEdges(flow.edges as Edge[]);
         } catch (error) {
           console.error('Error loading flow:', error);
@@ -134,7 +144,12 @@ export const FlowBuilder: React.FC = () => {
   if (isPreviewMode) {
     return (
       <FlowPreview
-        nodes={nodes as FlowNodeType[]}
+        nodes={nodes.map(node => ({
+          id: node.id,
+          type: node.type as 'question' | 'document',
+          position: node.position,
+          data: node.data as QuestionNodeData | DocumentNodeData
+        }))}
         edges={edges}
         onBack={() => setIsPreviewMode(false)}
       />

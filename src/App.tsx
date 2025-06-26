@@ -1,3 +1,4 @@
+
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -17,7 +18,7 @@ import ExternalLinks from "./pages/ExternalLinks";
 import Dashboard from "./pages/Dashboard";
 import NotFound from "./pages/NotFound";
 import CaseForm from "./pages/CaseForm";
-import FlowBuilderPage from "./pages/FlowBuilderPage";
+import FlowBuilderPage from "./pages/FlowBuilder";
 
 const queryClient = new QueryClient();
 
