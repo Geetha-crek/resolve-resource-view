@@ -3,8 +3,11 @@ import React from 'react';
 import { Handle, Position, NodeProps, NodeResizer } from '@xyflow/react';
 import { Card, CardContent } from '@/components/ui/card';
 import { FileCheck } from 'lucide-react';
+import { WorkflowGenerateDocumentNodeData } from '@/types/workflowBuilder';
 
 export const WorkflowGenerateDocumentNode: React.FC<NodeProps> = ({ data, selected }) => {
+  const nodeData = data as WorkflowGenerateDocumentNodeData;
+  
   return (
     <>
       <NodeResizer minWidth={80} minHeight={60} isVisible={selected} />
@@ -14,8 +17,8 @@ export const WorkflowGenerateDocumentNode: React.FC<NodeProps> = ({ data, select
             <FileCheck className="w-4 h-4 text-indigo-600 flex-shrink-0" />
             <span className="text-xs text-indigo-600">📝</span>
           </div>
-          <div className="font-medium text-xs text-slate-900 truncate" title={data.label}>
-            {data.label}
+          <div className="font-medium text-xs text-slate-900 truncate" title={nodeData.label}>
+            {nodeData.label}
           </div>
         </CardContent>
       </Card>

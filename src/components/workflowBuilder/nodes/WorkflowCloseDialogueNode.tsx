@@ -3,8 +3,11 @@ import React from 'react';
 import { Handle, Position, NodeProps, NodeResizer } from '@xyflow/react';
 import { Card, CardContent } from '@/components/ui/card';
 import { UserX } from 'lucide-react';
+import { WorkflowCloseDialogueNodeData } from '@/types/workflowBuilder';
 
 export const WorkflowCloseDialogueNode: React.FC<NodeProps> = ({ data, selected }) => {
+  const nodeData = data as WorkflowCloseDialogueNodeData;
+  
   return (
     <>
       <NodeResizer minWidth={80} minHeight={60} isVisible={selected} />
@@ -14,8 +17,8 @@ export const WorkflowCloseDialogueNode: React.FC<NodeProps> = ({ data, selected 
             <UserX className="w-4 h-4 text-red-600 flex-shrink-0" />
             <span className="text-xs text-red-600">❌</span>
           </div>
-          <div className="font-medium text-xs text-slate-900 truncate" title={data.label}>
-            {data.label}
+          <div className="font-medium text-xs text-slate-900 truncate" title={nodeData.label}>
+            {nodeData.label}
           </div>
         </CardContent>
       </Card>

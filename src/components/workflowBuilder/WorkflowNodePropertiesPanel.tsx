@@ -8,6 +8,15 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { X } from 'lucide-react';
+import { 
+  WorkflowNodeData,
+  WorkflowFormNodeData,
+  WorkflowEmailNodeData,
+  WorkflowSMSNodeData,
+  WorkflowCreateDialogueNodeData,
+  WorkflowCloseDialogueNodeData,
+  WorkflowGenerateDocumentNodeData
+} from '@/types/workflowBuilder';
 
 interface WorkflowNodePropertiesPanelProps {
   node: Node;
@@ -20,10 +29,10 @@ export const WorkflowNodePropertiesPanel: React.FC<WorkflowNodePropertiesPanelPr
   onUpdateNode,
   onClose
 }) => {
-  const [localData, setLocalData] = useState(node.data);
+  const [localData, setLocalData] = useState<WorkflowNodeData>(node.data as WorkflowNodeData);
 
   useEffect(() => {
-    setLocalData(node.data);
+    setLocalData(node.data as WorkflowNodeData);
   }, [node]);
 
   const handleFieldChange = (field: string, value: any) => {
@@ -82,7 +91,7 @@ export const WorkflowNodePropertiesPanel: React.FC<WorkflowNodePropertiesPanelPr
           <div className="space-y-2">
             <Label htmlFor="formId">Select Form</Label>
             <Select
-              value={localData.formId || ''}
+              value={(localData as WorkflowFormNodeData).formId || ''}
               onValueChange={(value) => handleFieldChange('formId', value)}
             >
               <SelectTrigger>
@@ -104,7 +113,7 @@ export const WorkflowNodePropertiesPanel: React.FC<WorkflowNodePropertiesPanelPr
             <Label htmlFor="emailTemplate">Email Template</Label>
             <Textarea
               id="emailTemplate"
-              value={localData.emailTemplate || ''}
+              value={(localData as WorkflowEmailNodeData).emailTemplate || ''}
               onChange={(e) => handleFieldChange('emailTemplate', e.target.value)}
               placeholder="Enter email template"
               rows={5}
@@ -117,7 +126,7 @@ export const WorkflowNodePropertiesPanel: React.FC<WorkflowNodePropertiesPanelPr
             <Label htmlFor="smsTemplate">SMS Template</Label>
             <Textarea
               id="smsTemplate"
-              value={localData.smsTemplate || ''}
+              value={(localData as WorkflowSMSNodeData).smsTemplate || ''}
               onChange={(e) => handleFieldChange('smsTemplate', e.target.value)}
               placeholder="Enter SMS template"
               rows={3}
@@ -131,7 +140,7 @@ export const WorkflowNodePropertiesPanel: React.FC<WorkflowNodePropertiesPanelPr
               <Label htmlFor="dialogueName">Dialogue Name</Label>
               <Input
                 id="dialogueName"
-                value={localData.dialogueName || ''}
+                value={(localData as WorkflowCreateDialogueNodeData).dialogueName || ''}
                 onChange={(e) => handleFieldChange('dialogueName', e.target.value)}
                 placeholder="Enter dialogue name"
               />
@@ -144,9 +153,9 @@ export const WorkflowNodePropertiesPanel: React.FC<WorkflowNodePropertiesPanelPr
                     <input
                       type="checkbox"
                       id={participant}
-                      checked={(localData.participants || []).includes(participant)}
+                      checked={((localData as WorkflowCreateDialogueNodeData).participants || []).includes(participant)}
                       onChange={(e) => {
-                        const participants = localData.participants || [];
+                        const participants = (localData as WorkflowCreateDialogueNodeData).participants || [];
                         if (e.target.checked) {
                           handleFieldChange('participants', [...participants, participant]);
                         } else {
@@ -167,7 +176,7 @@ export const WorkflowNodePropertiesPanel: React.FC<WorkflowNodePropertiesPanelPr
             <Label htmlFor="dialogueName">Dialogue Name to Close</Label>
             <Input
               id="dialogueName"
-              value={localData.dialogueName || ''}
+              value={(localData as WorkflowCloseDialogueNodeData).dialogueName || ''}
               onChange={(e) => handleFieldChange('dialogueName', e.target.value)}
               placeholder="Enter dialogue name"
             />
@@ -179,7 +188,7 @@ export const WorkflowNodePropertiesPanel: React.FC<WorkflowNodePropertiesPanelPr
             <Label htmlFor="documentTemplate">Document Template</Label>
             <Textarea
               id="documentTemplate"
-              value={localData.documentTemplate || ''}
+              value={(localData as WorkflowGenerateDocumentNodeData).documentTemplate || ''}
               onChange={(e) => handleFieldChange('documentTemplate', e.target.value)}
               placeholder="Enter document template"
               rows={5}

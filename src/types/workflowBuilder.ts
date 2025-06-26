@@ -1,73 +1,49 @@
 
-export interface WorkflowFormNodeData {
+export interface WorkflowNodeData {
   id: string;
   label: string;
-  formId: string; // Selected form ID
-  conditionalExpression: string;
+  conditionalExpression?: string;
   [key: string]: any;
 }
 
-export interface WorkflowEmailNodeData {
-  id: string;
-  label: string;
+export interface WorkflowFormNodeData extends WorkflowNodeData {
+  formId: string;
+}
+
+export interface WorkflowEmailNodeData extends WorkflowNodeData {
   emailTemplate: string;
-  conditionalExpression: string;
-  [key: string]: any;
 }
 
-export interface WorkflowSMSNodeData {
-  id: string;
-  label: string;
+export interface WorkflowSMSNodeData extends WorkflowNodeData {
   smsTemplate: string;
-  conditionalExpression: string;
-  [key: string]: any;
 }
 
-export interface WorkflowCreateDialogueNodeData {
-  id: string;
-  label: string;
+export interface WorkflowCreateDialogueNodeData extends WorkflowNodeData {
   dialogueName: string;
   participants: string[];
-  conditionalExpression: string;
-  [key: string]: any;
 }
 
-export interface WorkflowCloseDialogueNodeData {
-  id: string;
-  label: string;
+export interface WorkflowCloseDialogueNodeData extends WorkflowNodeData {
   dialogueName: string;
-  conditionalExpression: string;
-  [key: string]: any;
 }
 
-export interface WorkflowGenerateDocumentNodeData {
-  id: string;
-  label: string;
+export interface WorkflowGenerateDocumentNodeData extends WorkflowNodeData {
   documentTemplate: string;
-  conditionalExpression: string;
-  [key: string]: any;
 }
 
 export interface WorkflowNode {
   id: string;
   type: 'form' | 'sendEmail' | 'sendSMS' | 'createDialogue' | 'closeDialogue' | 'generateDocument';
   position: { x: number; y: number };
-  data: WorkflowFormNodeData | WorkflowEmailNodeData | WorkflowSMSNodeData | WorkflowCreateDialogueNodeData | WorkflowCloseDialogueNodeData | WorkflowGenerateDocumentNodeData;
+  data: WorkflowNodeData;
 }
 
-export interface WorkflowEdge {
-  id: string;
-  source: string;
-  target: string;
-  label?: string;
-}
-
-export interface Workflow {
+export interface WorkflowFlow {
   id: string;
   name: string;
   description?: string;
   nodes: WorkflowNode[];
-  edges: WorkflowEdge[];
+  edges: any[]; // Using any for now to match existing edge structure
   createdAt: string;
   updatedAt: string;
 }
