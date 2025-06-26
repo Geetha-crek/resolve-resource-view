@@ -43,6 +43,15 @@ const defaultCondition: EdgeCondition = {
   label: ''
 };
 
+const isValidEdgeCondition = (condition: unknown): condition is EdgeCondition => {
+  return typeof condition === 'object' && 
+         condition !== null && 
+         'enabled' in condition &&
+         'field' in condition &&
+         'operator' in condition &&
+         'value' in condition;
+};
+
 export const FlowBuilder: React.FC = () => {
   const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
@@ -185,7 +194,7 @@ export const FlowBuilder: React.FC = () => {
         id: edge.id,
         source: edge.source,
         target: edge.target,
-        condition: edge.data?.condition || defaultCondition,
+        condition: isValidEdgeCondition(edge.data?.condition) ? edge.data.condition : defaultCondition,
         label: edge.label as string
       })),
       createdAt: new Date().toISOString(),

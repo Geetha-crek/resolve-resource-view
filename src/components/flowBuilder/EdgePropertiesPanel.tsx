@@ -25,6 +25,15 @@ const defaultCondition: EdgeCondition = {
   label: ''
 };
 
+const isValidEdgeCondition = (condition: unknown): condition is EdgeCondition => {
+  return typeof condition === 'object' && 
+         condition !== null && 
+         'enabled' in condition &&
+         'field' in condition &&
+         'operator' in condition &&
+         'value' in condition;
+};
+
 export const EdgePropertiesPanel: React.FC<EdgePropertiesPanelProps> = ({
   edge,
   availableVariables,
@@ -33,13 +42,13 @@ export const EdgePropertiesPanel: React.FC<EdgePropertiesPanelProps> = ({
 }) => {
   const [localData, setLocalData] = useState<Partial<FlowEdge>>({
     label: (edge.label as string) || '',
-    condition: edge.data?.condition || defaultCondition
+    condition: isValidEdgeCondition(edge.data?.condition) ? edge.data.condition : defaultCondition
   });
 
   useEffect(() => {
     setLocalData({
       label: (edge.label as string) || '',
-      condition: edge.data?.condition || defaultCondition
+      condition: isValidEdgeCondition(edge.data?.condition) ? edge.data.condition : defaultCondition
     });
   }, [edge]);
 
