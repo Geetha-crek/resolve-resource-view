@@ -24,8 +24,8 @@ import { SolutionFlow, QuestionNodeData, DocumentNodeData } from '@/types/flowBu
 import { Plus, Play, Save, Upload } from 'lucide-react';
 
 const nodeTypes: NodeTypes = {
-  question: QuestionNode as any,
-  document: DocumentNode as any,
+  question: QuestionNode,
+  document: DocumentNode,
 };
 
 const initialNodes: Node[] = [];
@@ -49,34 +49,38 @@ export const FlowBuilder: React.FC = () => {
 
   const addQuestionNode = useCallback(() => {
     const id = `question-${Date.now()}`;
+    const questionData: QuestionNodeData = {
+      id,
+      label: 'New Question',
+      fieldType: 'text',
+      variableName: `var_${Date.now()}`,
+      helpText: '',
+      validation: { required: false }
+    };
+    
     const newNode: Node = {
       id,
       type: 'question',
       position: { x: Math.random() * 400, y: Math.random() * 400 },
-      data: {
-        id,
-        label: 'New Question',
-        fieldType: 'text',
-        variableName: `var_${Date.now()}`,
-        helpText: '',
-        validation: { required: false }
-      } as QuestionNodeData
+      data: questionData
     };
     setNodes((nds) => [...nds, newNode]);
   }, [setNodes]);
 
   const addDocumentNode = useCallback(() => {
     const id = `document-${Date.now()}`;
+    const documentData: DocumentNodeData = {
+      id,
+      label: 'Document Draft',
+      template: '<p>Draft document template...</p>',
+      variables: []
+    };
+    
     const newNode: Node = {
       id,
       type: 'document',
       position: { x: Math.random() * 400, y: Math.random() * 400 },
-      data: {
-        id,
-        label: 'Document Draft',
-        template: '<p>Draft document template...</p>',
-        variables: []
-      } as DocumentNodeData
+      data: documentData
     };
     setNodes((nds) => [...nds, newNode]);
   }, [setNodes]);
@@ -129,7 +133,7 @@ export const FlowBuilder: React.FC = () => {
             id: node.id,
             type: node.type,
             position: node.position,
-            data: node.data
+            data: node.data as Record<string, unknown>
           })));
           setEdges(flow.edges as Edge[]);
         } catch (error) {

@@ -5,7 +5,9 @@ import { Card, CardContent } from '@/components/ui/card';
 import { DocumentNodeData } from '@/types/flowBuilder';
 import { FileText } from 'lucide-react';
 
-export const DocumentNode: React.FC<NodeProps<DocumentNodeData>> = ({ data, selected }) => {
+export const DocumentNode: React.FC<NodeProps> = ({ data, selected }) => {
+  const nodeData = data as DocumentNodeData;
+  
   return (
     <Card className={`w-64 ${selected ? 'ring-2 ring-green-500' : ''} bg-green-50`}>
       <CardContent className="p-4">
@@ -14,12 +16,12 @@ export const DocumentNode: React.FC<NodeProps<DocumentNodeData>> = ({ data, sele
           <span className="font-medium text-sm">Document Node</span>
         </div>
         <div className="space-y-2">
-          <div className="font-medium text-slate-900">{data.label}</div>
+          <div className="font-medium text-slate-900">{nodeData.label}</div>
           <div className="text-xs text-slate-500">
-            Variables: {data.variables.length}
+            Variables: {nodeData.variables.length}
           </div>
           <div className="text-xs text-slate-600 truncate">
-            {data.template.replace(/<[^>]*>/g, '').substring(0, 50)}...
+            {nodeData.template.replace(/<[^>]*>/g, '').substring(0, 50)}...
           </div>
         </div>
       </CardContent>

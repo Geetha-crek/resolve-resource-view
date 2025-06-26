@@ -34,6 +34,7 @@ export interface QuestionNodeData {
   validation?: ValidationRule;
   options?: FieldOption[]; // For radio, dropdown
   placeholder?: string;
+  [key: string]: any; // Index signature for React Flow compatibility
 }
 
 export interface DocumentNodeData {
@@ -41,6 +42,7 @@ export interface DocumentNodeData {
   label: string;
   template: string;
   variables: string[]; // Variables used in template
+  [key: string]: any; // Index signature for React Flow compatibility
 }
 
 export interface FlowNode {

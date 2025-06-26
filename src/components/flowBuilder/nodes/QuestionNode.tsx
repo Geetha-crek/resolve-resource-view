@@ -5,7 +5,9 @@ import { Card, CardContent } from '@/components/ui/card';
 import { QuestionNodeData } from '@/types/flowBuilder';
 import { MessageCircle } from 'lucide-react';
 
-export const QuestionNode: React.FC<NodeProps<QuestionNodeData>> = ({ data, selected }) => {
+export const QuestionNode: React.FC<NodeProps> = ({ data, selected }) => {
+  const nodeData = data as QuestionNodeData;
+  
   const getFieldTypeIcon = (type: string) => {
     switch (type) {
       case 'text': return '📝';
@@ -31,15 +33,15 @@ export const QuestionNode: React.FC<NodeProps<QuestionNodeData>> = ({ data, sele
           <span className="font-medium text-sm">Question Node</span>
         </div>
         <div className="space-y-2">
-          <div className="font-medium text-slate-900">{data.label}</div>
+          <div className="font-medium text-slate-900">{nodeData.label}</div>
           <div className="flex items-center gap-2 text-sm text-slate-600">
-            <span>{getFieldTypeIcon(data.fieldType)}</span>
-            <span className="capitalize">{data.fieldType}</span>
+            <span>{getFieldTypeIcon(nodeData.fieldType)}</span>
+            <span className="capitalize">{nodeData.fieldType}</span>
           </div>
           <div className="text-xs text-slate-500">
-            Variable: {data.variableName}
+            Variable: {nodeData.variableName}
           </div>
-          {data.validation?.required && (
+          {nodeData.validation?.required && (
             <div className="text-xs text-red-600">Required</div>
           )}
         </div>

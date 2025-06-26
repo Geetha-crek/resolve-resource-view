@@ -42,31 +42,39 @@ export const NodePropertiesPanel: React.FC<NodePropertiesPanelProps> = ({
   };
 
   const handleValidationChange = (field: string, value: any) => {
-    const questionData = localData as QuestionNodeData;
-    setLocalData({
-      ...localData,
-      validation: { ...questionData.validation, [field]: value }
-    });
+    if (node.type === 'question') {
+      const questionData = localData as QuestionNodeData;
+      setLocalData({
+        ...localData,
+        validation: { ...questionData.validation, [field]: value }
+      });
+    }
   };
 
   const addOption = () => {
-    const questionData = localData as QuestionNodeData;
-    const options = questionData.options || [];
-    const newOption: FieldOption = { label: 'New Option', value: `option_${Date.now()}` };
-    handleFieldChange('options', [...options, newOption]);
+    if (node.type === 'question') {
+      const questionData = localData as QuestionNodeData;
+      const options = questionData.options || [];
+      const newOption: FieldOption = { label: 'New Option', value: `option_${Date.now()}` };
+      handleFieldChange('options', [...options, newOption]);
+    }
   };
 
   const updateOption = (index: number, field: string, value: string) => {
-    const questionData = localData as QuestionNodeData;
-    const options = [...(questionData.options || [])];
-    options[index] = { ...options[index], [field]: value };
-    handleFieldChange('options', options);
+    if (node.type === 'question') {
+      const questionData = localData as QuestionNodeData;
+      const options = [...(questionData.options || [])];
+      options[index] = { ...options[index], [field]: value };
+      handleFieldChange('options', options);
+    }
   };
 
   const removeOption = (index: number) => {
-    const questionData = localData as QuestionNodeData;
-    const options = questionData.options || [];
-    handleFieldChange('options', options.filter((_, i) => i !== index));
+    if (node.type === 'question') {
+      const questionData = localData as QuestionNodeData;
+      const options = questionData.options || [];
+      handleFieldChange('options', options.filter((_, i) => i !== index));
+    }
   };
 
   const fieldTypes: FieldType[] = [
