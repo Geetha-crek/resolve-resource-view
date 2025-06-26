@@ -19,6 +19,7 @@ import { DocumentNode } from './nodes/DocumentNode';
 import { StaticTextNode } from './nodes/StaticTextNode';
 import { NodeSidebar } from './NodeSidebar';
 import { NodePropertiesPanel } from './NodePropertiesPanel';
+import { EdgePropertiesPanel } from './EdgePropertiesPanel';
 import { FlowPreview } from './FlowPreview';
 import { SolutionFlow, QuestionNodeData, DocumentNodeData, StaticTextNodeData } from '@/types/flowBuilder';
 import { Play, Save, Upload } from 'lucide-react';
@@ -36,6 +37,7 @@ export const FlowBuilder: React.FC = () => {
   const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
   const [selectedNode, setSelectedNode] = useState<Node | null>(null);
+  const [selectedEdge, setSelectedEdge] = useState<Edge | null>(null);
   const [isPreviewMode, setIsPreviewMode] = useState(false);
   const [flowName, setFlowName] = useState('Untitled Flow');
 
@@ -46,6 +48,17 @@ export const FlowBuilder: React.FC = () => {
 
   const onNodeClick = useCallback((event: React.MouseEvent, node: Node) => {
     setSelectedNode(node);
+    setSelectedEdge(null);
+  }, []);
+
+  const onEdgeClick = useCallback((event: React.MouseEvent, edge: Edge) => {
+    setSelectedEdge(edge);
+    setSelectedNode(null);
+  }, []);
+
+  const onPaneClick = useCallback(() => {
+    setSelectedNode(null);
+    setSelectedEdge(null);
   }, []);
 
   const addNode = useCallback((type: 'question' | 'document' | 'staticText') => {
@@ -101,6 +114,34 @@ export const FlowBuilder: React.FC = () => {
     }
   }, [setNodes, selectedNode]);
 
+  const updateEdgeData = useCallback((edgeId: string, newData: any) => {
+    setEdges((eds) =>
+      eds.map((edge) =>
+        edge.id === edgeId ? { 
+          ...edge, 
+          data: { ...edge.data, ...newData },
+          label: newData.label || edge.label
+        } : edge
+      )
+    );
+    
+    // Update selected edge if it's the one being updated
+    if (selectedEdge && selectedEdge.id === edgeId) {
+      setSelectedEdge(prev => prev ? { 
+        ...prev, 
+        data: { ...prev.data, ...newData },
+        label: newData.label || prev.label
+      } : null);
+    }
+  }, [setEdges, selectedEdge]);
+
+  const getAvailableVariables = useCallback(() => {
+    return nodes
+      .filter(node => node.type === 'question')
+      .map(node => (node.data as any).variableName)
+      .filter(Boolean);
+  }, [nodes]);
+
   const saveFlow = useCallback(() => {
     const flow: SolutionFlow = {
       id: `flow-${Date.now()}`,
@@ -114,7 +155,8 @@ export const FlowBuilder: React.FC = () => {
       edges: edges.map(edge => ({
         id: edge.id,
         source: edge.source,
-        target: edge.target
+        target: edge.target,
+        condition: edge.data?.condition
       })),
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString()
@@ -215,6 +257,8 @@ export const FlowBuilder: React.FC = () => {
           onEdgesChange={onEdgesChange}
           onConnect={onConnect}
           onNodeClick={onNodeClick}
+          onEdgeClick={onEdgeClick}
+          onPaneClick={onPaneClick}
           nodeTypes={nodeTypes}
           fitView
           className="bg-slate-100"
@@ -225,13 +269,23 @@ export const FlowBuilder: React.FC = () => {
       </div>
 
       {/* Properties Panel */}
-      {selectedNode && (
+      {(selectedNode || selectedEdge) && (
         <div className="w-80 bg-white border-l border-slate-200 overflow-y-auto">
-          <NodePropertiesPanel
-            node={selectedNode}
-            onUpdateNode={updateNodeData}
-            onClose={() => setSelectedNode(null)}
-          />
+          {selectedNode && (
+            <NodePropertiesPanel
+              node={selectedNode}
+              onUpdateNode={updateNodeData}
+              onClose={() => setSelectedNode(null)}
+            />
+          )}
+          {selectedEdge && (
+            <EdgePropertiesPanel
+              edge={selectedEdge}
+              availableVariables={getAvailableVariables()}
+              onUpdateEdge={updateEdgeData}
+              onClose={() => setSelectedEdge(null)}
+            />
+          )}
         </div>
       )}
     </div>

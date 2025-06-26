@@ -1,3 +1,4 @@
+
 export type FieldType = 
   | 'text'
   | 'textarea'
@@ -60,15 +61,20 @@ export interface FlowNode {
   data: QuestionNodeData | DocumentNodeData | StaticTextNodeData;
 }
 
+export interface EdgeCondition {
+  enabled: boolean;
+  field: string; // Variable name from a previous question
+  operator: 'equals' | 'not_equals' | 'contains' | 'not_contains' | 'greater_than' | 'less_than' | 'is_empty' | 'is_not_empty';
+  value: string;
+  label?: string; // Optional label for the condition
+}
+
 export interface FlowEdge {
   id: string;
   source: string;
   target: string;
-  condition?: {
-    field: string;
-    operator: 'equals' | 'contains' | 'greater' | 'less';
-    value: string;
-  };
+  condition?: EdgeCondition;
+  label?: string;
 }
 
 export interface SolutionFlow {
