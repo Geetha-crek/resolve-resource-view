@@ -1,0 +1,216 @@
+
+import React, { useState, useCallback, useMemo } from 'react';
+import {
+  ReactFlow,
+  Node,
+  Edge,
+  addEdge,
+  useNodesState,
+  useEdgesState,
+  Controls,
+  Background,
+  Connection,
+  NodeTypes,
+  BackgroundVariant
+} from '@xyflow/react';
+import '@xyflow/react/dist/style.css';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { QuestionNode } from './nodes/QuestionNode';
+import { DocumentNode } from './nodes/DocumentNode';
+import { NodePropertiesPanel } from './NodePropertiesPanel';
+import { FlowPreview } from './FlowPreview';
+import { SolutionFlow, FlowNode as FlowNodeType } from '@/types/flowBuilder';
+import { Plus, Play, Save, Upload } from 'lucide-react';
+
+const nodeTypes: NodeTypes = {
+  question: QuestionNode,
+  document: DocumentNode,
+};
+
+const initialNodes: Node[] = [];
+const initialEdges: Edge[] = [];
+
+export const FlowBuilder: React.FC = () => {
+  const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
+  const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
+  const [selectedNode, setSelectedNode] = useState<Node | null>(null);
+  const [isPreviewMode, setIsPreviewMode] = useState(false);
+  const [flowName, setFlowName] = useState('Untitled Flow');
+
+  const onConnect = useCallback(
+    (params: Connection) => setEdges((eds) => addEdge(params, eds)),
+    [setEdges]
+  );
+
+  const onNodeClick = useCallback((event: React.MouseEvent, node: Node) => {
+    setSelectedNode(node);
+  }, []);
+
+  const addQuestionNode = useCallback(() => {
+    const id = `question-${Date.now()}`;
+    const newNode: Node = {
+      id,
+      type: 'question',
+      position: { x: Math.random() * 400, y: Math.random() * 400 },
+      data: {
+        id,
+        label: 'New Question',
+        fieldType: 'text',
+        variableName: `var_${Date.now()}`,
+        helpText: '',
+        validation: { required: false }
+      }
+    };
+    setNodes((nds) => [...nds, newNode]);
+  }, [setNodes]);
+
+  const addDocumentNode = useCallback(() => {
+    const id = `document-${Date.now()}`;
+    const newNode: Node = {
+      id,
+      type: 'document',
+      position: { x: Math.random() * 400, y: Math.random() * 400 },
+      data: {
+        id,
+        label: 'Document Draft',
+        template: '<p>Draft document template...</p>',
+        variables: []
+      }
+    };
+    setNodes((nds) => [...nds, newNode]);
+  }, [setNodes]);
+
+  const updateNodeData = useCallback((nodeId: string, data: any) => {
+    setNodes((nds) =>
+      nds.map((node) =>
+        node.id === nodeId ? { ...node, data: { ...node.data, ...data } } : node
+      )
+    );
+  }, [setNodes]);
+
+  const saveFlow = useCallback(() => {
+    const flow: SolutionFlow = {
+      id: `flow-${Date.now()}`,
+      name: flowName,
+      nodes: nodes as FlowNodeType[],
+      edges: edges.map(edge => ({
+        id: edge.id,
+        source: edge.source,
+        target: edge.target
+      })),
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString()
+    };
+    
+    const dataStr = JSON.stringify(flow, null, 2);
+    const dataBlob = new Blob([dataStr], { type: 'application/json' });
+    const url = URL.createObjectURL(dataBlob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = `${flowName.replace(/\s+/g, '_')}.json`;
+    link.click();
+  }, [nodes, edges, flowName]);
+
+  const loadFlow = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        try {
+          const flow: SolutionFlow = JSON.parse(e.target?.result as string);
+          setFlowName(flow.name);
+          setNodes(flow.nodes as Node[]);
+          setEdges(flow.edges as Edge[]);
+        } catch (error) {
+          console.error('Error loading flow:', error);
+          alert('Error loading flow file');
+        }
+      };
+      reader.readAsText(file);
+    }
+  }, [setNodes, setEdges]);
+
+  if (isPreviewMode) {
+    return (
+      <FlowPreview
+        nodes={nodes as FlowNodeType[]}
+        edges={edges}
+        onBack={() => setIsPreviewMode(false)}
+      />
+    );
+  }
+
+  return (
+    <div className="h-screen flex bg-slate-50">
+      {/* Main Canvas */}
+      <div className="flex-1 relative">
+        <div className="absolute top-4 left-4 z-10 flex gap-2">
+          <input
+            type="text"
+            value={flowName}
+            onChange={(e) => setFlowName(e.target.value)}
+            className="px-3 py-2 border rounded-md bg-white"
+            placeholder="Flow name"
+          />
+          <Button onClick={addQuestionNode} size="sm">
+            <Plus className="w-4 h-4 mr-1" />
+            Question
+          </Button>
+          <Button onClick={addDocumentNode} size="sm" variant="secondary">
+            <Plus className="w-4 h-4 mr-1" />
+            Document
+          </Button>
+          <Button onClick={() => setIsPreviewMode(true)} size="sm" variant="outline">
+            <Play className="w-4 h-4 mr-1" />
+            Preview
+          </Button>
+          <Button onClick={saveFlow} size="sm" variant="outline">
+            <Save className="w-4 h-4 mr-1" />
+            Save
+          </Button>
+          <label className="cursor-pointer">
+            <Button size="sm" variant="outline" asChild>
+              <span>
+                <Upload className="w-4 h-4 mr-1" />
+                Load
+              </span>
+            </Button>
+            <input
+              type="file"
+              accept=".json"
+              onChange={loadFlow}
+              className="hidden"
+            />
+          </label>
+        </div>
+
+        <ReactFlow
+          nodes={nodes}
+          edges={edges}
+          onNodesChange={onNodesChange}
+          onEdgesChange={onEdgesChange}
+          onConnect={onConnect}
+          onNodeClick={onNodeClick}
+          nodeTypes={nodeTypes}
+          fitView
+          className="bg-slate-100"
+        >
+          <Background variant={BackgroundVariant.Dots} />
+          <Controls />
+        </ReactFlow>
+      </div>
+
+      {/* Properties Panel */}
+      {selectedNode && (
+        <div className="w-80 bg-white border-l border-slate-200 overflow-y-auto">
+          <NodePropertiesPanel
+            node={selectedNode}
+            onUpdateNode={updateNodeData}
+            onClose={() => setSelectedNode(null)}
+          />
+        </div>
+      )}
+    </div>
+  );
+};
