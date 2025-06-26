@@ -62,7 +62,8 @@ export const FlowBuilder: React.FC = () => {
       id,
       type: 'question',
       position: { x: Math.random() * 400, y: Math.random() * 400 },
-      data: questionData
+      data: questionData as Record<string, unknown>,
+      className: 'group' // Add group class for hover effects
     };
     setNodes((nds) => [...nds, newNode]);
   }, [setNodes]);
@@ -80,7 +81,8 @@ export const FlowBuilder: React.FC = () => {
       id,
       type: 'document',
       position: { x: Math.random() * 400, y: Math.random() * 400 },
-      data: documentData
+      data: documentData as Record<string, unknown>,
+      className: 'group' // Add group class for hover effects
     };
     setNodes((nds) => [...nds, newNode]);
   }, [setNodes]);
@@ -133,7 +135,8 @@ export const FlowBuilder: React.FC = () => {
             id: node.id,
             type: node.type,
             position: node.position,
-            data: node.data as Record<string, unknown>
+            data: node.data as Record<string, unknown>,
+            className: 'group'
           })));
           setEdges(flow.edges as Edge[]);
         } catch (error) {
