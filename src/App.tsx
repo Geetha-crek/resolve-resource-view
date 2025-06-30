@@ -4,6 +4,8 @@ import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { AuthProvider } from "./contexts/AuthContext";
+import { ProtectedRoute } from "./components/auth/ProtectedRoute";
 import Layout from "./components/layout/Layout";
 import Index from "./pages/Index";
 import Cases from "./pages/Cases";
@@ -28,29 +30,33 @@ const App = () => (
     <TooltipProvider>
       <Toaster />
       <Sonner />
-      <BrowserRouter>
-        <Layout>
-          <Routes>
-            <Route path="/" element={<Index />} />
-            <Route path="/cases" element={<Cases />} />
-            <Route path="/cases/new" element={<CaseForm />} />
-            <Route path="/users" element={<Users />} />
-            <Route path="/users/new" element={<UserForm />} />
-            <Route path="/users/edit/:id" element={<UserForm />} />
-            <Route path="/documents" element={<Documents />} />
-            <Route path="/notes" element={<Notes />} />
-            <Route path="/discussions" element={<Discussions />} />
-            <Route path="/timeline" element={<Timeline />} />
-            <Route path="/related-tickets" element={<RelatedTickets />} />
-            <Route path="/external-links" element={<ExternalLinks />}  />
-            <Route path="/dashboard" element={<Dashboard />} />
-            <Route path="/solution-paths" element={<SolutionPathsPage />} />
-            <Route path="/workflow-builder" element={<WorkflowBuilderPage />} />
-            {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-            <Route path="*" element={<NotFound />} />
-          </Routes>
-        </Layout>
-      </BrowserRouter>
+      <AuthProvider>
+        <BrowserRouter>
+          <ProtectedRoute>
+            <Layout>
+              <Routes>
+                <Route path="/" element={<Index />} />
+                <Route path="/cases" element={<Cases />} />
+                <Route path="/cases/new" element={<CaseForm />} />
+                <Route path="/users" element={<Users />} />
+                <Route path="/users/new" element={<UserForm />} />
+                <Route path="/users/edit/:id" element={<UserForm />} />
+                <Route path="/documents" element={<Documents />} />
+                <Route path="/notes" element={<Notes />} />
+                <Route path="/discussions" element={<Discussions />} />
+                <Route path="/timeline" element={<Timeline />} />
+                <Route path="/related-tickets" element={<RelatedTickets />} />
+                <Route path="/external-links" element={<ExternalLinks />}  />
+                <Route path="/dashboard" element={<Dashboard />} />
+                <Route path="/solution-paths" element={<SolutionPathsPage />} />
+                <Route path="/workflow-builder" element={<WorkflowBuilderPage />} />
+                {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+                <Route path="*" element={<NotFound />} />
+              </Routes>
+            </Layout>
+          </ProtectedRoute>
+        </BrowserRouter>
+      </AuthProvider>
     </TooltipProvider>
   </QueryClientProvider>
 );
